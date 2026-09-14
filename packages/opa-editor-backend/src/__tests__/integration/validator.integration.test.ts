@@ -62,7 +62,7 @@ skipIfNoRegal('Regal integration', () => {
   let RegalBridge: any;
 
   beforeAll(async () => {
-    RegalBridge = (require('../service/regalBridge')).RegalBridge;
+    RegalBridge = (require('../../service/regalBridge')).RegalBridge;
   });
 
   it('lints a valid Rego file with zero violations', async () => {

@@ -4,6 +4,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { DiagnosticsPanel } from '../../components/DiagnosticsPanel';
+import type { DomainError } from '@develapp/opa-domain-contract';
 
 describe('DiagnosticsPanel', () => {
   it('shows "No issues found" when there are no errors', () => {
@@ -17,7 +18,7 @@ describe('DiagnosticsPanel', () => {
   });
 
   it('displays the total error count', () => {
-    const errors = [
+    const errors: DomainError[] = [
       { layer: 'L1-schema', severity: 'error', message: 'type error' },
       { layer: 'L3-domain', severity: 'error', message: 'missing package' },
       { layer: 'L2-regal', severity: 'warning', message: 'style issue' },
@@ -27,7 +28,7 @@ describe('DiagnosticsPanel', () => {
   });
 
   it('groups errors by layer', () => {
-    const errors = [
+    const errors: DomainError[] = [
       { layer: 'L3-domain', severity: 'error', message: 'missing package' },
       { layer: 'L1-schema', severity: 'error', message: 'type error' },
       { layer: 'L3-domain', severity: 'info', message: 'no metadata' },
@@ -41,7 +42,7 @@ describe('DiagnosticsPanel', () => {
   });
 
   it('displays line numbers when available', () => {
-    const errors = [
+    const errors: DomainError[] = [
       {
         layer: 'L3-domain',
         severity: 'error',
