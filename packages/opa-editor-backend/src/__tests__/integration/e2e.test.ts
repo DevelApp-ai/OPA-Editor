@@ -48,7 +48,11 @@ const validRego = [
   '',
   'deny if { input.cost > 10000 }',
   'allow if { not deny }',
-  'report[msg] if {',
+  // NOTE: Rego v1 (OPA 1.x) requires `contains` for partial-set rules
+  // (`report[msg] if { ... }` is a parse error). Use a set comprehension
+  // assigned to a complete rule instead — semantically equivalent and
+  // valid Rego v1.
+  'report := {msg |',
   '  input.cost > 10000',
   '  msg := sprintf("high cost: %v", [input.cost])',
   '}',
@@ -159,7 +163,10 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
     const client = new OpaClient({ baseUrl: opaUrl });
     const result = await client.publishPolicy('e2e-test-policy', validRego);
 
-    expect(result.status).toBe('ok');
+    // Surface OPA's error (HTTP status + response body) on failure
+    if (result.status !== 'ok') {
+      throw new Error(`publishPolicy failed: ${result.message}`);
+    }
     expect(result.id).toBe('e2e-test-policy');
   });
 
