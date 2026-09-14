@@ -30,34 +30,6 @@ const REGAL_AVAILABLE = binaryAvailable(REGAL_BINARY);
 const skipIfNoOPA = OPA_AVAILABLE ? describe : describe.skip;
 const skipIfNoRegal = REGAL_AVAILABLE ? describe : describe.skip;
 
-const validRego = [
-  '# METADATA',
-  '# schemas:',
-  '#   - input: schema["test"]',
-  'package test.domain',
-  '',
-  'default allow := false',
-  '',
-  'allow if {',
-  '  input.name == "ok"',
-  '  data.test.config.enabled',
-  '}',
-].join('\n');
-
-const testDescriptor = {
-  id: 'test.domain',
-  title: 'Test Domain',
-  inputSchemaUri: 'schemas/test.json',
-  requiredPackagePrefix: 'test.domain',
-  requiredRules: ['allow'],
-  allowedDataRefs: /^data\.test\./,
-  snippets: [],
-  validateDomain(rego: string) {
-    const { validateDomain } = require('@develapp/opa-domain-contract');
-    return validateDomain(rego, this);
-  },
-};
-
 skipIfNoRegal('Regal integration', () => {
   let RegalBridge: any;
 

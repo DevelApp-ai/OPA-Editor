@@ -61,8 +61,9 @@ export const opaEditorBackendPlugin = createBackendPlugin({
         try {
           await regalBridge.start();
           logger.info('Regal LSP bridge started');
-        } catch (err: any) {
-          logger.warn(`Regal LSP bridge failed to start: ${err.message}`);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          logger.warn(`Regal LSP bridge failed to start: ${message}`);
         }
 
         // --- Create OPA client (direct REST) ---

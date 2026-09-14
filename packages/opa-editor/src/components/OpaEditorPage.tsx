@@ -14,7 +14,7 @@
  * See design spec §6.
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
 import { Button, Grid, Box, CircularProgress } from '@mui/material';
 
@@ -78,12 +78,13 @@ export const OpaEditorPage: React.FC = () => {
     try {
       const result = await api.validate(selectedDomainId, rego);
       setServerErrors(result.errors);
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setServerErrors([
         {
           layer: 'L3-domain',
           severity: 'error',
-          message: `Backend validation failed: ${err.message}`,
+          message: `Backend validation failed: ${message}`,
         },
       ]);
     } finally {
@@ -108,8 +109,9 @@ export const OpaEditorPage: React.FC = () => {
         setPublishResult(`✗ Rejected — ${result.errors.length} errors`);
         setServerErrors(result.errors);
       }
-    } catch (err: any) {
-      setPublishResult(`✗ Error: ${err.message}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setPublishResult(`✗ Error: ${message}`);
     } finally {
       setPublishing(false);
     }

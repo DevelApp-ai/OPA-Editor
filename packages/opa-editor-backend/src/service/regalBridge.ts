@@ -104,17 +104,25 @@ export class RegalBridge extends EventEmitter {
           const result = JSON.parse(stdout);
           const violations = result.violations ?? [];
           resolve(
-            violations.map((v: any) => ({
-              range: {
-                startLine: v.location?.row ?? 1,
-                startColumn: v.location?.col ?? 1,
-                endLine: v.location?.row ?? 1,
-                endColumn: v.location?.col ?? 1,
-              },
-              severity: v.level ?? 'warning',
-              message: v.description ?? v.title ?? 'lint violation',
-              source: `regal:${v.category ?? 'lint'}`,
-            })),
+            violations.map(
+              (v: {
+                location?: { row?: number; col?: number };
+                level?: string;
+                description?: string;
+                title?: string;
+                category?: string;
+              }) => ({
+                range: {
+                  startLine: v.location?.row ?? 1,
+                  startColumn: v.location?.col ?? 1,
+                  endLine: v.location?.row ?? 1,
+                  endColumn: v.location?.col ?? 1,
+                },
+                severity: (v.level ?? 'warning') as RegalDiagnostic['severity'],
+                message: v.description ?? v.title ?? 'lint violation',
+                source: `regal:${v.category ?? 'lint'}`,
+              }),
+            ),
           );
         } catch {
           resolve([]);

@@ -100,7 +100,7 @@ export class GitOpsPolicyStore {
     try {
       await git(['add', relPath]);
       const commitMsg = `chore(policy): update ${policyId} (${domainId} v${version})`;
-      const { stdout } = await git([
+      await git([
         'commit',
         '-m',
         `"${commitMsg}"`,
@@ -119,7 +119,7 @@ export class GitOpsPolicyStore {
         version,
         committedAt: new Date().toISOString(),
       };
-    } catch (err) {
+    } catch {
       // If commit fails (e.g., no changes), still return the file path
       const sha = (await git(['rev-parse', 'HEAD'])).stdout.trim();
       return {

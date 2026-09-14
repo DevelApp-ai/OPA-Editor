@@ -56,7 +56,7 @@ export const regoMonarchLanguage = {
       }],
 
       // Brackets
-      [/[{}()\[\]]/, '@brackets'],
+      [/[{}()[\]]/, '@brackets'],
 
       // Punctuation
       [/[.,;:]/, 'delimiter'],
@@ -74,13 +74,34 @@ export const regoMonarchLanguage = {
 };
 
 /**
+ * Minimal structural type for the Monaco completion API surface we use.
+ * Avoids depending on monaco-editor types directly.
+ */
+export interface MonacoCompletionApi {
+  languages: {
+    CompletionItemKind: Record<string, number>;
+    CompletionItemInsertTextRule: Record<string, number>;
+  };
+}
+
+/** A Monaco completion item (structurally compatible with monaco-editor). */
+export interface MonacoCompletion {
+  label: string;
+  kind: number;
+  insertText: string;
+  insertTextRules?: number;
+  detail?: string;
+  documentation?: string;
+}
+
+/**
  * Generate Monaco completion items from a DomainDescriptor's schema fields.
  * See design spec §6.2 — schema-driven completion.
  */
 export function schemaCompletions(
   fields: SchemaField[],
-  monaco: any,
-): any[] {
+  monaco: MonacoCompletionApi,
+): MonacoCompletion[] {
   return fields.map((f) => ({
     label: f.path,
     kind: monaco.languages.CompletionItemKind.Field,
@@ -95,8 +116,8 @@ export function schemaCompletions(
  */
 export function snippetCompletions(
   snippets: DomainDescriptor['snippets'],
-  monaco: any,
-): any[] {
+  monaco: MonacoCompletionApi,
+): MonacoCompletion[] {
   return snippets.map((s) => ({
     label: s.label,
     kind: monaco.languages.CompletionItemKind.Snippet,

@@ -20,22 +20,59 @@ interface RegoEditorProps {
   onValidate: (errors: DomainError[]) => void;
 }
 
+/**
+ * Minimal structural type for the Monaco API surface used by this editor.
+ * Avoids depending on monaco-editor types directly.
+ */
+interface MonacoLike {
+  languages: {
+    getLanguages: () => Array<{ id: string }>;
+    register: (language: { id: string }) => void;
+    setMonarchTokensProvider: (languageId: string, tokenizer: unknown) => void;
+    setLanguageConfiguration: (
+      languageId: string,
+      configuration: unknown,
+    ) => void;
+    registerCompletionItemProvider: (
+      languageId: string,
+      provider: {
+        triggerCharacters?: string[];
+        provideCompletionItems: (
+          model: unknown,
+          position: unknown,
+        ) => { suggestions: unknown[] };
+      },
+    ) => void;
+    CompletionItemKind: Record<string, number>;
+    CompletionItemInsertTextRule: Record<string, number>;
+  };
+  editor: {
+    getEditors: () => Array<{ getModel: () => unknown }>;
+    setModelMarkers: (
+      model: unknown,
+      owner: string,
+      markers: Array<Record<string, unknown>>,
+    ) => void;
+  };
+  MarkerSeverity: Record<string, number>;
+}
+
 export const RegoEditor: React.FC<RegoEditorProps> = ({
   domain,
   value,
   onChange,
   onValidate,
 }) => {
-  const [monacoRef, setMonacoRef] = useState<any>(null);
+  const [monacoRef, setMonacoRef] = useState<MonacoLike | null>(null);
 
   // Register Rego language and providers on mount
   const handleMount = useCallback(
-    async (_editor: any, monaco: any) => {
+    async (_editor: unknown, monaco: MonacoLike) => {
       setMonacoRef(monaco);
 
       // Register the Rego language if not already registered
       const langs = monaco.languages.getLanguages();
-      if (!langs.some((l: any) => l.id === 'rego')) {
+      if (!langs.some((l) => l.id === 'rego')) {
         monaco.languages.register({ id: 'rego' });
 
         monaco.languages.setMonarchTokensProvider(
@@ -65,7 +102,7 @@ export const RegoEditor: React.FC<RegoEditorProps> = ({
       if (domain) {
         monaco.languages.registerCompletionItemProvider('rego', {
           triggerCharacters: ['.'],
-          provideCompletionItems: (_model: any, _position: any) => {
+          provideCompletionItems: (_model: unknown, _position: unknown) => {
             const fields = domain.inputSchemaFields?.() ?? [];
             return {
               suggestions: [

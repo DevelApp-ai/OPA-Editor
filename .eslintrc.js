@@ -23,11 +23,12 @@ module.exports = {
   },
   overrides: [
     {
-      // Jest tests legitimately use require() for mocked modules.
-      files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
+      files: ['**/__tests__/**/*.ts', '**/__tests__/**/*.tsx'],
       rules: {
+        // Tests use CommonJS require() for lazy/conditional imports.
         '@typescript-eslint/no-var-requires': 'off',
-        '@typescript-eslint/no-require-imports': 'off',
+        // Mocks and dynamically imported modules are intentionally any.
+        '@typescript-eslint/no-explicit-any': 'off',
       },
     },
   ],

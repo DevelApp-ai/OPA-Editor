@@ -56,13 +56,12 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
   let opaUrl: string;
   let OpaClient: any;
   let GitOpsPolicyStore: any;
-  let RegalBridge: any;
   let repoPath: string;
 
   beforeAll(async () => {
     OpaClient = (await import('../../service/opaClient.js')).OpaClient;
-    GitOpsPolicyStore = (await import('../../service/policyStore.js')).GitOpsPolicyStore;
-    RegalBridge = (await import('../../service/regalBridge.js')).RegalBridge;
+    GitOpsPolicyStore = (await import('../../service/policyStore.js'))
+      .GitOpsPolicyStore;
 
     // Start OPA server
     opaUrl = OPA_SERVER_URL;
@@ -123,8 +122,6 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
     // Wait a moment for the policy to be active
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const client = new OpaClient({ baseUrl: opaUrl });
-
     // Query the policy to verify it's active
     const resp = await fetch(`${opaUrl}/v1/policies/e2e-test-policy`, {
       headers: { 'Content-Type': 'application/json' },
@@ -154,8 +151,6 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
   });
 
   it('evaluates the published policy against input', async () => {
-    const client = new OpaClient({ baseUrl: opaUrl });
-
     // Use the ad-hoc query API to evaluate the policy
     const resp = await fetch(`${opaUrl}/v1/data/test/domain/e2e/allow`, {
       method: 'POST',

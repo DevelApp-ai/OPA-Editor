@@ -38,8 +38,7 @@ export interface RouterOptions {
 }
 
 export function createRouter(options: RouterOptions): Router {
-  const { domains, regalBridge, opaClient, policyStore, authorize, logger } =
-    options;
+  const { domains, regalBridge, opaClient, policyStore, logger } = options;
   const router = Router();
 
   // --- GET /domains — list available domains ---
@@ -179,11 +178,12 @@ export function createRouter(options: RouterOptions): Router {
     try {
       stored = await policyStore.save(policyId, domainId, rego, version);
       logger.info(`Policy ${policyId} committed to Git: ${stored.revision}`);
-    } catch (err: any) {
-      logger.error(`GitOps store failed: ${err.message}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      logger.error(`GitOps store failed: ${message}`);
       res.status(500).json({
         status: 'error',
-        error: `Failed to persist policy: ${err.message}`,
+        error: `Failed to persist policy: ${message}`,
       });
       return;
     }
@@ -201,11 +201,12 @@ export function createRouter(options: RouterOptions): Router {
         return;
       }
       logger.info(`Policy ${policyId} pushed to OPA: revision ${publishResult.revision}`);
-    } catch (err: any) {
-      logger.error(`OPA client error: ${err.message}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      logger.error(`OPA client error: ${message}`);
       res.status(502).json({
         status: 'error',
-        error: `Failed to push to OPA: ${err.message}`,
+        error: `Failed to push to OPA: ${message}`,
       });
       return;
     }

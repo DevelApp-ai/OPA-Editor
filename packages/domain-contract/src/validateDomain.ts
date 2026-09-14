@@ -27,13 +27,13 @@ const PACKAGE_RE = /^\s*package\s+([a-zA-Z0-9_.]+)\s*$/m;
  *   - `report[r] if {` (partial set/object rules)
  */
 const RULE_RE =
-  /^(?:default\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\[.*\])?\s*(?:contains\s+\w+\s*)?(?::=|=|\{)\s*(?:if\s+)?[\{=]/gm;
+  /^(?:default\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\[.*\])?\s*(?:contains\s+\w+\s*)?(?::=|=|\{)\s*(?:if\s+)?[{=]/gm;
 
 /**
  * Regex to find `data.*` references in the Rego module.
  * Matches: `data.some.path`, `data.services[x]`
  */
-const DATA_REF_RE = /data\.([a-zA-Z0-9_.\[\]"']+)/g;
+const DATA_REF_RE = /data\.([a-zA-Z0-9_.[\]"']+)/g;
 
 /**
  * Check if a Rego module has a METADATA schemas annotation.

@@ -13,11 +13,7 @@ import { writeFileSync, unlinkSync, mkdtempSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 
-import type {
-  DomainDescriptor,
-  DomainError,
-  DomainValidationResult,
-} from '@develapp/opa-domain-contract';
+import type { DomainDescriptor, DomainError } from '@develapp/opa-domain-contract';
 import { validateDomain } from '@develapp/opa-domain-contract';
 import type { RegalBridge, RegalDiagnostic } from './regalBridge';
 
@@ -155,7 +151,7 @@ async function runOpaTypeCheck(
   );
 
   try {
-    const { stdout, stderr } = await runCommand(opaBinary, [
+    const { stderr } = await runCommand(opaBinary, [
       'eval',
       '--schema',
       schemaFile,
@@ -170,8 +166,15 @@ async function runOpaTypeCheck(
     }
 
     return [];
-  } catch (err: any) {
-    const output = err.stderr ?? err.message ?? '';
+  } catch (err) {
+    let output = '';
+    if (typeof err === 'object' && err !== null && 'stderr' in err) {
+      output = String((err as { stderr?: unknown }).stderr ?? '');
+    } else if (err instanceof Error) {
+      output = err.message;
+    } else {
+      output = String(err);
+    }
     if (output.includes('type_error') || output.includes('rego_type_error')) {
       return parseOpaErrors(output, 'L1-schema');
     }
