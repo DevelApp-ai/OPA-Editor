@@ -7,9 +7,9 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  lint-and-typecheck:
+    name: Lint & Type-Check
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -28,5 +28,85 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm test
+      - name: Format check
+        run: npm run format:check
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test -- --ci --reporters=default
+
+      - name: Run build
+        run: npm run tsc
+
+  integration-tests:
+    name: Integration Tests (OPA + Regal)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Install Regal
+        run: |
+          curl -L -o /usr/local/bin/regal https://github.com/StyraInc/regal/releases/latest/download/regal_Linux_x86_64
+          chmod +x /usr/local/bin/regal
+
+      - name: Run integration tests
+        run: npm test -- --testPathPattern=integration --ci
+        env:
+          OPA_BINARY_PATH: opa
+          REGAL_BINARY_PATH: regal
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run E2E tests
+        run: npm test -- --testPathPattern=e2e --ci
+        env:
+          OPA_BINARY_PATH: opa
+          OPA_SERVER_URL: http://localhost:8181
