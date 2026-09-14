@@ -9,7 +9,6 @@
  */
 
 import { spawn } from 'child_process';
-import { promisify } from 'util';
 import { writeFileSync, unlinkSync, mkdtempSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
@@ -21,8 +20,6 @@ import type {
 } from '@develapp/opa-domain-contract';
 import { validateDomain } from '@develapp/opa-domain-contract';
 import type { RegalBridge, RegalDiagnostic } from './regalBridge';
-
-const execAsync = promisify(spawn);
 
 export interface ValidatorOptions {
   /** Path to the OPA binary. Defaults to 'opa'. */

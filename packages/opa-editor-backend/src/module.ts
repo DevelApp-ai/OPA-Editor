@@ -38,9 +38,8 @@ export const opaEditorBackendPlugin = createBackendPlugin({
         httpRouter: coreServices.httpRouter,
         config: coreServices.rootConfig,
         logger: coreServices.logger,
-        permissions: coreServices.permissions,
       },
-      async init({ httpRouter, config, logger, permissions }) {
+      async init({ httpRouter, config, logger }) {
         // --- Load domain descriptors ---
         // In production, domains are dynamically imported from config.
         // For now, we support a registry pattern.

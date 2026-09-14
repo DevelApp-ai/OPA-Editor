@@ -5,7 +5,6 @@
  * are not available. In CI, OPA and Regal are installed via the workflow.
  */
 
-import { spawn } from 'child_process';
 import { writeFileSync, mkdtempSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
