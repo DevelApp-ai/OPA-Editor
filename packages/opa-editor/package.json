@@ -1,0 +1,33 @@
+{
+  "name": "@develapp/opa-editor",
+  "version": "0.1.0",
+  "description": "Backstage frontend plugin — domain-scoped OPA Rego editor",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@develapp/opa-domain-contract": "^0.1.0"
+  },
+  "peerDependencies": {
+    "@backstage/core-plugin-api": "^1.9.0",
+    "@backstage/core-components": "^0.14.0",
+    "@monaco-editor/react": "^4.6.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.3.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.5.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "testMatch": ["<rootDir>/src/__tests__/**/*.test.tsx"]
+  }
+}

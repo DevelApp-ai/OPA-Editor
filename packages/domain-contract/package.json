@@ -1,0 +1,24 @@
+{
+  "name": "@develapp/opa-domain-contract",
+  "version": "0.1.0",
+  "description": "Shared DomainDescriptor contract for domain-scoped OPA Rego editing",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --build",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.5.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["<rootDir>/src/__tests__/**/*.test.ts"]
+  }
+}
