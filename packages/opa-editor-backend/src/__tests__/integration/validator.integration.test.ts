@@ -72,6 +72,9 @@ skipIfNoOPA('OPA integration', () => {
     const inputFile = join(tmpDir, 'input.json');
 
     const rego = [
+      '# METADATA',
+      '# schemas:',
+      '#   - input: schema["test"]',
       'package test.domain',
       '',
       'default allow := false',
@@ -115,11 +118,15 @@ skipIfNoOPA('OPA integration', () => {
     const tmpDir = mkdtempSync(join(tmpdir(), 'opa-int-'));
     const regoFile = join(tmpDir, 'policy.rego');
     const schemaFile = join(tmpDir, 'schema.json');
+    const inputFile = join(tmpDir, 'input.json');
 
+    // No METADATA schema annotation here: a bare schema file passed via
+    // --schema types `input` globally, so referencing a field that is not
+    // in the schema produces a rego_type_error. (A by-reference annotation
+    // like `input: schema["test"]` would override the global schema with a
+    // schema id that doesn't exist in the set, silently disabling type
+    // checking.)
     const rego = [
-      '# METADATA',
-      '# schemas:',
-      '#   - input: schema["test"]',
       'package test.domain',
       '',
       'default allow := false',
@@ -132,24 +139,27 @@ skipIfNoOPA('OPA integration', () => {
       properties: { name: { type: 'string' } },
     });
     writeFileSync(schemaFile, schema, 'utf-8');
+    writeFileSync(inputFile, JSON.stringify({ name: 'ok' }), 'utf-8');
 
     const { spawnSync } = require('child_process');
     const args = [
       'eval',
       '--data',
       regoFile,
+      '--input',
+      inputFile,
       '--schema',
       schemaFile,
       'data.test.domain.allow',
     ];
     const result = spawnSync(OPA_BINARY, args, {
-      input: JSON.stringify({ name: 'ok' }),
       stdio: ['pipe', 'pipe', 'pipe'],
       timeout: 10000,
     });
 
-    // OPA should report a type error
+    // OPA should report a type error on stderr and exit non-zero
+    expect(result.status).not.toBe(0);
     const stderr = result.stderr.toString();
-    expect(stderr.length).toBeGreaterThan(0);
+    expect(stderr).toContain('rego_type_error');
   });
 });

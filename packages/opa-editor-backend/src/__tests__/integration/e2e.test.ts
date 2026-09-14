@@ -88,7 +88,10 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
     // without necessarily running a server).
     opaUrl = OPA_SERVER_URL || LOCAL_OPA_URL;
     if (!(await waitForOpa(opaUrl, 1500))) {
-      opaProcess = spawn(OPA_BINARY, ['server', '--addr', '127.0.0.1:8181'], {
+      // 'opa run --server' starts OPA in server mode ('opa server' is not
+      // a valid subcommand).
+      const opaArgs = ['run', '--server', '--addr', '127.0.0.1:8181'];
+      opaProcess = spawn(OPA_BINARY, opaArgs, {
         stdio: ['pipe', 'pipe', 'pipe'],
         detached: false,
       });
