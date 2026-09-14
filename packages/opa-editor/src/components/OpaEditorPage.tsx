@@ -16,7 +16,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
-import { Button, Grid, Box, CircularProgress } from '@material-ui/core';
+import { Button, Grid, Box, CircularProgress } from '@mui/material';
 
 import { opaEditorApiRef, type PublishMetadata } from '../api/OpaEditorApiClient';
 import { listDomains } from '../api/domainRegistry';
@@ -118,7 +118,7 @@ export const OpaEditorPage: React.FC = () => {
   const allErrors = [...liveErrors, ...serverErrors];
 
   return (
-    <Box p={3}>
+    <Box sx={{ p: 3 }}>
       <Grid container spacing={2}>
         {/* Domain picker */}
         <Grid item xs={12}>
@@ -152,7 +152,7 @@ export const OpaEditorPage: React.FC = () => {
 
         {/* Action buttons */}
         <Grid item xs={12}>
-          <Box display="flex" gap={1} alignItems="center">
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Button
               variant="outlined"
               color="primary"
@@ -170,7 +170,7 @@ export const OpaEditorPage: React.FC = () => {
               {publishing ? <CircularProgress size={20} /> : 'Publish'}
             </Button>
             {publishResult && (
-              <Box ml={2}>
+              <Box sx={{ ml: 2 }}>
                 <span>{publishResult}</span>
               </Box>
             )}
