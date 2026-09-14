@@ -39,7 +39,7 @@ describe('validatePolicy', () => {
   });
 
   it('runs L3 domain guard and returns valid for a correct policy', async () => {
-    const { validatePolicy } = await import('../service/validator');
+    const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
       mockRegalBridge,
@@ -52,7 +52,7 @@ describe('validatePolicy', () => {
 
   it('includes L2 warnings when Regal is unavailable', async () => {
     mockRegalBridge.lintSource = jest.fn().mockRejectedValue(new Error('regal not found'));
-    const { validatePolicy } = await import('../service/validator');
+    const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
       mockRegalBridge,
@@ -67,7 +67,7 @@ describe('validatePolicy', () => {
   });
 
   it('includes L1 warnings when OPA binary is unavailable', async () => {
-    const { validatePolicy } = await import('../service/validator');
+    const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
       mockRegalBridge,
@@ -82,7 +82,7 @@ describe('validatePolicy', () => {
   });
 
   it('fails when L3 domain guard finds errors', async () => {
-    const { validatePolicy } = await import('../service/validator');
+    const { validatePolicy } = await import('../service/validator.js');
     const badRego = 'package wrong.prefix\n\ndefault allow := false\nallow if { true }';
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: badRego, domain: testDescriptor },
@@ -108,7 +108,7 @@ describe('validatePolicy', () => {
         source: 'regal:rules',
       },
     ]);
-    const { validatePolicy } = await import('../service/validator');
+    const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
       mockRegalBridge,
@@ -129,7 +129,7 @@ describe('validatePolicy', () => {
         source: 'regal:style',
       },
     ]);
-    const { validatePolicy } = await import('../service/validator');
+    const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
       mockRegalBridge,

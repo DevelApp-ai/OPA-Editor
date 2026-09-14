@@ -1,6 +1,5 @@
 /**
- * Jest setup for the frontend package.
- * Registers @testing-library/jest-dom matchers (toBeInTheDocument, etc.).
+ * Jest setup file for the frontend package.
+ * Loads custom DOM matchers from @testing-library/jest-dom.
  */
-
 import '@testing-library/jest-dom';

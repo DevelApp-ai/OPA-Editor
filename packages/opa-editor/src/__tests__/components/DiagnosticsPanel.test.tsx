@@ -3,7 +3,7 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import { DiagnosticsPanel } from '../components/DiagnosticsPanel';
+import { DiagnosticsPanel } from '../../components/DiagnosticsPanel';
 
 describe('DiagnosticsPanel', () => {
   it('shows "No issues found" when there are no errors', () => {

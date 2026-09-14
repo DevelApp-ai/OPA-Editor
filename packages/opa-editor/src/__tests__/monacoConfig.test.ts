@@ -20,7 +20,7 @@ describe('regoMonarchLanguage', () => {
 
 describe('schemaCompletions', () => {
   it('converts schema fields to Monaco completions', async () => {
-    const { schemaCompletions } = await import('../rego/monacoConfig');
+    const { schemaCompletions } = await import('../rego/monacoConfig.js');
     const fakeMonaco = {
       languages: { CompletionItemKind: { Field: 5 } },
     };
@@ -39,7 +39,7 @@ describe('schemaCompletions', () => {
 
 describe('snippetCompletions', () => {
   it('converts snippets to Monaco snippet completions', async () => {
-    const { snippetCompletions } = await import('../rego/monacoConfig');
+    const { snippetCompletions } = await import('../rego/monacoConfig.js');
     const fakeMonaco = {
       languages: {
         CompletionItemKind: { Snippet: 4 },

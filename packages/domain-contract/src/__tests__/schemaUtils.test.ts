@@ -92,21 +92,21 @@ describe('parseSchema', () => {
 
 describe('schemaHash', () => {
   it('computes a SHA-256 hash', async () => {
-    const { schemaHash } = await import('../schemaUtils');
+    const { schemaHash } = await import('../schemaUtils.js');
     const hash = await schemaHash({ type: 'object' });
     expect(hash).toHaveLength(64); // SHA-256 hex
     expect(hash).toMatch(/^[0-9a-f]+$/);
   });
 
   it('is deterministic for the same input', async () => {
-    const { schemaHash } = await import('../schemaUtils');
+    const { schemaHash } = await import('../schemaUtils.js');
     const hash1 = await schemaHash({ a: 1, b: 2 });
     const hash2 = await schemaHash({ b: 2, a: 1 }); // different key order
     expect(hash1).toBe(hash2);
   });
 
   it('differs for different schemas', async () => {
-    const { schemaHash } = await import('../schemaUtils');
+    const { schemaHash } = await import('../schemaUtils.js');
     const hash1 = await schemaHash({ a: 1 });
     const hash2 = await schemaHash({ a: 2 });
     expect(hash1).not.toBe(hash2);

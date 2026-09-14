@@ -60,9 +60,9 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
   let repoPath: string;
 
   beforeAll(async () => {
-    OpaClient = (await import('../service/opaClient')).OpaClient;
-    GitOpsPolicyStore = (await import('../service/policyStore')).GitOpsPolicyStore;
-    RegalBridge = (await import('../service/regalBridge')).RegalBridge;
+    OpaClient = (await import('../service/opaClient.js')).OpaClient;
+    GitOpsPolicyStore = (await import('../service/policyStore.js')).GitOpsPolicyStore;
+    RegalBridge = (await import('../service/regalBridge.js')).RegalBridge;
 
     // Start OPA server
     opaUrl = OPA_SERVER_URL;

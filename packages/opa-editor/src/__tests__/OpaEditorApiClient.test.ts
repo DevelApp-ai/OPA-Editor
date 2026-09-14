@@ -14,7 +14,7 @@ describe('OpaEditorApiClient', () => {
       getBaseUrl: jest.fn().mockResolvedValue('http://localhost:7007/api/opa-editor'),
     };
 
-    OpaEditorApiClient = (await import('../api/OpaEditorApiClient')).OpaEditorApiClient;
+    OpaEditorApiClient = (await import('../api/OpaEditorApiClient.js')).OpaEditorApiClient;
   });
 
   function createClient() {

@@ -11,7 +11,7 @@ describe('RegalBridge', () => {
   let RegalBridge: any;
 
   beforeEach(async () => {
-    RegalBridge = (await import('../service/regalBridge')).RegalBridge;
+    RegalBridge = (await import('../service/regalBridge.js')).RegalBridge;
   });
 
   afterEach(() => {

@@ -10,7 +10,7 @@ describe('OpaClient', () => {
   beforeEach(async () => {
     mockFetch = jest.fn();
     (global as any).fetch = mockFetch;
-    OpaClient = (await import('../service/opaClient')).OpaClient;
+    OpaClient = (await import('../service/opaClient.js')).OpaClient;
   });
 
   afterEach(() => {

@@ -19,7 +19,7 @@ import type {
 } from '@develapp/opa-domain-contract';
 
 /** The raw FOCUS v1.4 JSON Schema content (inline for portability). */
-import focusSchemaJson from './schemas/focus-v1.4.json' with { type: 'json' };
+import focusSchemaJson from './schemas/focus-v1.4.json';
 
 const parsedSchema = parseSchema(
   typeof focusSchemaJson === 'string'

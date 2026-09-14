@@ -10,7 +10,7 @@ describe('domainRegistry', () => {
   beforeEach(async () => {
     // We need to re-import to get a fresh module each time
     jest.resetModules();
-    const mod = await import('../api/domainRegistry');
+    const mod = await import('../api/domainRegistry.js');
     registerDomain = mod.registerDomain;
     getDomain = mod.getDomain;
     listDomains = mod.listDomains;

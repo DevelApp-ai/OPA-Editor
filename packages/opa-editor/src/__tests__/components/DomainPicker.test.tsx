@@ -3,7 +3,7 @@
  */
 
 import { render, screen, fireEvent } from '@testing-library/react';
-import { DomainPicker } from '../components/DomainPicker';
+import { DomainPicker } from '../../components/DomainPicker';
 
 const mockDomains = [
   {
