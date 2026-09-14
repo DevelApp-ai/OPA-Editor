@@ -34,7 +34,11 @@ export interface RouterOptions {
     credentials: unknown,
   ) => Promise<Array<{ result: string }>>;
   /** Logger */
-  logger: { info: (m: string) => void; error: (m: string) => void; warn: (m: string) => void };
+  logger: {
+    info: (m: string) => void;
+    error: (m: string) => void;
+    warn: (m: string) => void;
+  };
 }
 
 export function createRouter(options: RouterOptions): Router {
@@ -200,7 +204,9 @@ export function createRouter(options: RouterOptions): Router {
         });
         return;
       }
-      logger.info(`Policy ${policyId} pushed to OPA: revision ${publishResult.revision}`);
+      logger.info(
+        `Policy ${policyId} pushed to OPA: revision ${publishResult.revision}`,
+      );
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       logger.error(`OPA client error: ${message}`);

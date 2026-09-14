@@ -6,7 +6,10 @@
 
 import { createApiRef } from '@backstage/core-plugin-api';
 import type { DiscoveryApi, FetchApi } from '@backstage/core-plugin-api';
-import type { DomainError, DomainValidationResult } from '@develapp/opa-domain-contract';
+import type {
+  DomainError,
+  DomainValidationResult,
+} from '@develapp/opa-domain-contract';
 
 export const opaEditorApiRef = createApiRef<OpaEditorApi>({
   id: 'plugin.opa-editor.api',

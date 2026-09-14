@@ -80,12 +80,14 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
 
   beforeAll(async () => {
     OpaClient = (await import('../../service/opaClient.js')).OpaClient;
-    GitOpsPolicyStore = (await import('../../service/policyStore.js'))
-      .GitOpsPolicyStore;
+    GitOpsPolicyStore =
+      (await import('../../service/policyStore.js')).GitOpsPolicyStore;
 
-    // Start OPA server (unless an external one was configured via env)
+    // Start OPA server — use OPA_SERVER_URL if a server is actually
+    // reachable there; otherwise start our own (CI sets OPA_SERVER_URL
+    // without necessarily running a server).
     opaUrl = OPA_SERVER_URL || LOCAL_OPA_URL;
-    if (!OPA_SERVER_URL) {
+    if (!(await waitForOpa(opaUrl, 1500))) {
       opaProcess = spawn(OPA_BINARY, ['server', '--addr', '127.0.0.1:8181'], {
         stdio: ['pipe', 'pipe', 'pipe'],
         detached: false,
@@ -97,6 +99,7 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
       });
 
       // Wait for OPA to be ready instead of sleeping for a fixed time
+      opaUrl = LOCAL_OPA_URL;
       const ready = await waitForOpa(opaUrl, 20000);
       if (!ready) {
         throw new Error(
@@ -109,9 +112,15 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
     // Create temp Git repo for GitOps
     repoPath = mkdtempSync(join(tmpdir(), 'opa-e2e-'));
     require('child_process').execSync('git init', { cwd: repoPath });
-    require('child_process').execSync('git config user.email "e2e@test.ai"', { cwd: repoPath });
-    require('child_process').execSync('git config user.name "E2E Test"', { cwd: repoPath });
-    require('child_process').execSync('git commit --allow-empty -m "init"', { cwd: repoPath });
+    require('child_process').execSync('git config user.email "e2e@test.ai"', {
+      cwd: repoPath,
+    });
+    require('child_process').execSync('git config user.name "E2E Test"', {
+      cwd: repoPath,
+    });
+    require('child_process').execSync('git commit --allow-empty -m "init"', {
+      cwd: repoPath,
+    });
   }, 30000);
 
   afterAll(() => {
@@ -138,7 +147,9 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
 
     const result = descriptor.validateDomain(validRego);
     expect(result.valid).toBe(true);
-    expect(result.errors.filter((e: any) => e.severity === 'error')).toHaveLength(0);
+    expect(
+      result.errors.filter((e: any) => e.severity === 'error'),
+    ).toHaveLength(0);
   });
 
   it('publishes a policy to OPA via REST', async () => {
@@ -170,7 +181,12 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
       policiesDir: 'policies',
     });
 
-    const result = await store.save('e2e-persist', 'test.domain', validRego, '1.0.0');
+    const result = await store.save(
+      'e2e-persist',
+      'test.domain',
+      validRego,
+      '1.0.0',
+    );
 
     expect(result.id).toBe('e2e-persist');
     expect(result.revision).toHaveLength(12);

@@ -13,7 +13,10 @@ import { writeFileSync, unlinkSync, mkdtempSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 
-import type { DomainDescriptor, DomainError } from '@develapp/opa-domain-contract';
+import type {
+  DomainDescriptor,
+  DomainError,
+} from '@develapp/opa-domain-contract';
 import { validateDomain } from '@develapp/opa-domain-contract';
 import type { RegalBridge, RegalDiagnostic } from './regalBridge';
 
@@ -194,7 +197,12 @@ async function runOpaTypeCheck(
 function toDomainError(d: RegalDiagnostic): DomainError {
   return {
     layer: 'L2-regal',
-    severity: d.severity === 'info' ? 'info' : d.severity === 'error' ? 'error' : 'warning',
+    severity:
+      d.severity === 'info'
+        ? 'info'
+        : d.severity === 'error'
+          ? 'error'
+          : 'warning',
     message: d.message,
     range: d.range,
   };

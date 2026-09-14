@@ -16,4 +16,8 @@ export type {
   PublishResponse,
 } from './api/OpaEditorApiClient';
 export { listDomains, getDomain, registerDomain } from './api/domainRegistry';
-export { regoMonarchLanguage, schemaCompletions, snippetCompletions } from './rego/monacoConfig';
+export {
+  regoMonarchLanguage,
+  schemaCompletions,
+  snippetCompletions,
+} from './rego/monacoConfig';

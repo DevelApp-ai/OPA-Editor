@@ -8,7 +8,8 @@ import type { RegoSnippet } from '@develapp/opa-domain-contract';
 export const finopsSnippets: RegoSnippet[] = [
   {
     label: 'Deny expensive service',
-    description: 'Deny a charge when EffectiveCost exceeds a threshold for a service',
+    description:
+      'Deny a charge when EffectiveCost exceeds a threshold for a service',
     body: [
       '# METADATA',
       '# schemas:',

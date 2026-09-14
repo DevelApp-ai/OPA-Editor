@@ -51,7 +51,11 @@ describe('RegalBridge', () => {
     const bridge = new RegalBridge({ binaryPath: 'regal' });
     await bridge.start();
 
-    expect(spawn).toHaveBeenCalledWith('regal', ['language-server'], expect.any(Object));
+    expect(spawn).toHaveBeenCalledWith(
+      'regal',
+      ['language-server'],
+      expect.any(Object),
+    );
     expect(bridge.isRunning).toBe(true);
   });
 

@@ -4,13 +4,7 @@
  */
 
 import React from 'react';
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import type { DomainDescriptor } from '@develapp/opa-domain-contract';
 
 interface DomainPickerProps {

@@ -18,9 +18,15 @@ import React, { useState, useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
 import { Button, Grid, Box, CircularProgress } from '@mui/material';
 
-import { opaEditorApiRef, type PublishMetadata } from '../api/OpaEditorApiClient';
+import {
+  opaEditorApiRef,
+  type PublishMetadata,
+} from '../api/OpaEditorApiClient';
 import { listDomains } from '../api/domainRegistry';
-import type { DomainDescriptor, DomainError } from '@develapp/opa-domain-contract';
+import type {
+  DomainDescriptor,
+  DomainError,
+} from '@develapp/opa-domain-contract';
 import { DomainPicker } from './DomainPicker';
 import { RegoEditor } from './RegoEditor';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
@@ -98,7 +104,8 @@ export const OpaEditorPage: React.FC = () => {
     setPublishResult(null);
     try {
       const metadata: PublishMetadata = {
-        policyId: `policy-${selectedDomainId.replace(/\./g, '-')}-${Date.now()}`,
+        policyId:
+          `policy-${selectedDomainId.replace(/\./g, '-')}-${Date.now()}`,
         version: '1.0.0',
         description: `OPA Rego policy for ${selectedDomain?.title}`,
       };

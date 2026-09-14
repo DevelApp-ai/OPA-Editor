@@ -80,7 +80,8 @@ export class RegalBridge extends EventEmitter {
    */
   async lintFileSync(filePath: string): Promise<RegalDiagnostic[]> {
     return new Promise((resolve, reject) => {
-      const proc = spawn(this.binaryPath, ['lint', '--format', 'json', filePath], {
+      const args = ['lint', '--format', 'json', filePath];
+      const proc = spawn(this.binaryPath, args, {
         cwd: this.workdir,
       });
 

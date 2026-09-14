@@ -3,7 +3,10 @@
  * See design spec §6.2.
  */
 
-import type { DomainDescriptor, SchemaField } from '@develapp/opa-domain-contract';
+import type {
+  DomainDescriptor,
+  SchemaField,
+} from '@develapp/opa-domain-contract';
 
 /**
  * Monarch tokenizer for Rego syntax highlighting.
@@ -122,7 +125,8 @@ export function snippetCompletions(
     label: s.label,
     kind: monaco.languages.CompletionItemKind.Snippet,
     insertText: s.body,
-    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+    insertTextRules:
+      monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
     detail: s.description,
   }));
 }

@@ -6,7 +6,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Editor } from '@monaco-editor/react';
-import type { DomainDescriptor, DomainError } from '@develapp/opa-domain-contract';
+import type {
+  DomainDescriptor,
+  DomainError,
+} from '@develapp/opa-domain-contract';
 import {
   regoMonarchLanguage,
   schemaCompletions,

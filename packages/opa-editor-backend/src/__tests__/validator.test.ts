@@ -3,7 +3,10 @@
  * Mocks OPA binary and Regal bridge; tests L3 logic and fallback behavior.
  */
 
-import type { DomainDescriptor, DomainValidationResult } from '@develapp/opa-domain-contract';
+import type {
+  DomainDescriptor,
+  DomainValidationResult,
+} from '@develapp/opa-domain-contract';
 import { validateDomain } from '@develapp/opa-domain-contract';
 
 const testDescriptor: DomainDescriptor = {
@@ -51,7 +54,9 @@ describe('validatePolicy', () => {
   });
 
   it('includes L2 warnings when Regal is unavailable', async () => {
-    mockRegalBridge.lintSource = jest.fn().mockRejectedValue(new Error('regal not found'));
+    mockRegalBridge.lintSource = jest.fn().mockRejectedValue(
+      new Error('regal not found'),
+    );
     const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
@@ -83,7 +88,12 @@ describe('validatePolicy', () => {
 
   it('fails when L3 domain guard finds errors', async () => {
     const { validatePolicy } = await import('../service/validator.js');
-    const badRego = 'package wrong.prefix\n\ndefault allow := false\nallow if { true }';
+    const badRego = [
+      'package wrong.prefix',
+      '',
+      'default allow := false',
+      'allow if { true }',
+    ].join('\n');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: badRego, domain: testDescriptor },
       mockRegalBridge,

@@ -11,10 +11,12 @@ describe('OpaEditorApiClient', () => {
   beforeEach(async () => {
     mockFetch = jest.fn();
     mockDiscoveryApi = {
-      getBaseUrl: jest.fn().mockResolvedValue('http://localhost:7007/api/opa-editor'),
+      getBaseUrl:
+        jest.fn().mockResolvedValue('http://localhost:7007/api/opa-editor'),
     };
 
-    OpaEditorApiClient = (await import('../api/OpaEditorApiClient.js')).OpaEditorApiClient;
+    OpaEditorApiClient =
+      (await import('../api/OpaEditorApiClient.js')).OpaEditorApiClient;
   });
 
   function createClient() {
@@ -48,7 +50,9 @@ describe('OpaEditorApiClient', () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
       const client = createClient();
-      await expect(client.getDomains()).rejects.toThrow('Failed to list domains');
+      await expect(client.getDomains()).rejects.toThrow(
+        'Failed to list domains',
+      );
     });
   });
 
@@ -67,7 +71,10 @@ describe('OpaEditorApiClient', () => {
         'http://localhost:7007/api/opa-editor/validate',
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify({ domainId: 'finops.costmodel', rego: 'package test' }),
+          body: JSON.stringify({
+            domainId: 'finops.costmodel',
+            rego: 'package test',
+          }),
         }),
       );
       expect(result).toEqual(validationResult);
@@ -77,7 +84,9 @@ describe('OpaEditorApiClient', () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 400 });
 
       const client = createClient();
-      await expect(client.validate('test', 'rego')).rejects.toThrow('Validate failed');
+      await expect(client.validate('test', 'rego')).rejects.toThrow(
+        'Validate failed',
+      );
     });
   });
 
@@ -90,7 +99,9 @@ describe('OpaEditorApiClient', () => {
       });
 
       const client = createClient();
-      const result = await client.evaluate('test.domain', 'package test', { user: 'alice' });
+      const result = await client.evaluate('test.domain', 'package test', {
+        user: 'alice',
+      });
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://localhost:7007/api/opa-editor/evaluate',

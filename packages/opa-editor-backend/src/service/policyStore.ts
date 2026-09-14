@@ -99,7 +99,8 @@ export class GitOpsPolicyStore {
 
     try {
       await git(['add', relPath]);
-      const commitMsg = `chore(policy): update ${policyId} (${domainId} v${version})`;
+      const commitMsg =
+        `chore(policy): update ${policyId} (${domainId} v${version})`;
       await git([
         'commit',
         '-m',

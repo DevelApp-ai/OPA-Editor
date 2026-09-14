@@ -71,29 +71,37 @@ skipIfNoOPA('OPA integration', () => {
     const schemaFile = join(tmpDir, 'schema.json');
     const inputFile = join(tmpDir, 'input.json');
 
-    writeFileSync(regoFile, [
+    const rego = [
       'package test.domain',
       '',
       'default allow := false',
       'allow if { input.name == "ok" }',
       '',
-    ].join('\n'), 'utf-8');
+    ].join('\n');
+    writeFileSync(regoFile, rego, 'utf-8');
 
-    writeFileSync(schemaFile, JSON.stringify({
+    const schema = JSON.stringify({
       type: 'object',
       properties: { name: { type: 'string' } },
-    }), 'utf-8');
+    });
+    writeFileSync(schemaFile, schema, 'utf-8');
 
     // Write the input to a temp file — reading from /dev/stdin is unreliable
     // in CI (spawnSync piping).
     writeFileSync(inputFile, JSON.stringify({ name: 'ok' }), 'utf-8');
 
     const { spawnSync } = require('child_process');
-    const result = spawnSync(OPA_BINARY, [
-      'eval', '--data', regoFile, '--input', inputFile,
-      '--schema', schemaFile,
+    const args = [
+      'eval',
+      '--data',
+      regoFile,
+      '--input',
+      inputFile,
+      '--schema',
+      schemaFile,
       'data.test.domain.allow',
-    ], {
+    ];
+    const result = spawnSync(OPA_BINARY, args, {
       stdio: ['pipe', 'pipe', 'pipe'],
       timeout: 10000,
     });
@@ -108,7 +116,7 @@ skipIfNoOPA('OPA integration', () => {
     const regoFile = join(tmpDir, 'policy.rego');
     const schemaFile = join(tmpDir, 'schema.json');
 
-    writeFileSync(regoFile, [
+    const rego = [
       '# METADATA',
       '# schemas:',
       '#   - input: schema["test"]',
@@ -116,18 +124,25 @@ skipIfNoOPA('OPA integration', () => {
       '',
       'default allow := false',
       'allow if { input.nonexistent_field == 42 }',
-    ].join('\n'), 'utf-8');
+    ].join('\n');
+    writeFileSync(regoFile, rego, 'utf-8');
 
-    writeFileSync(schemaFile, JSON.stringify({
+    const schema = JSON.stringify({
       type: 'object',
       properties: { name: { type: 'string' } },
-    }), 'utf-8');
+    });
+    writeFileSync(schemaFile, schema, 'utf-8');
 
     const { spawnSync } = require('child_process');
-    const result = spawnSync(OPA_BINARY, [
-      'eval', '--data', regoFile, '--schema', schemaFile,
+    const args = [
+      'eval',
+      '--data',
+      regoFile,
+      '--schema',
+      schemaFile,
       'data.test.domain.allow',
-    ], {
+    ];
+    const result = spawnSync(OPA_BINARY, args, {
       input: JSON.stringify({ name: 'ok' }),
       stdio: ['pipe', 'pipe', 'pipe'],
       timeout: 10000,

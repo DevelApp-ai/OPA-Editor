@@ -24,7 +24,10 @@ describe('OpaClient', () => {
     });
 
     it('stores the token', () => {
-      const client = new OpaClient({ baseUrl: 'http://localhost:8181', token: 'secret' });
+      const client = new OpaClient({
+        baseUrl: 'http://localhost:8181',
+        token: 'secret',
+      });
       expect((client as any).token).toBe('secret');
     });
   });
@@ -36,8 +39,14 @@ describe('OpaClient', () => {
         json: async () => ({ revision: 'rev123' }),
       });
 
-      const client = new OpaClient({ baseUrl: 'http://opa:8181', token: 'tok' });
-      const result = await client.publishPolicy('my-policy', 'package test\nallow := true');
+      const client = new OpaClient({
+        baseUrl: 'http://opa:8181',
+        token: 'tok',
+      });
+      const result = await client.publishPolicy(
+        'my-policy',
+        'package test\nallow := true',
+      );
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://opa:8181/v1/policies/my-policy',
@@ -70,7 +79,10 @@ describe('OpaClient', () => {
         json: async () => ({}),
       });
 
-      const client = new OpaClient({ baseUrl: 'http://opa:8181', token: 'mytoken' });
+      const client = new OpaClient({
+        baseUrl: 'http://opa:8181',
+        token: 'mytoken',
+      });
       await client.publishPolicy('p', 'package p');
 
       const callArgs = mockFetch.mock.calls[0][1];
@@ -86,7 +98,9 @@ describe('OpaClient', () => {
       });
 
       const client = new OpaClient({ baseUrl: 'http://opa:8181' });
-      const result = await client.evaluate('data.test.allow', { user: 'alice' });
+      const result = await client.evaluate('data.test.allow', {
+        user: 'alice',
+      });
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://opa:8181/v1/query',

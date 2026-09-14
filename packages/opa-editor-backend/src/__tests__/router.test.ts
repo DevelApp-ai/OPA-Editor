@@ -94,7 +94,11 @@ describe('createRouter', () => {
       apiVersion: 'backstage.io/v1beta1',
       kind: 'Resource',
       metadata: { name: 'test-policy', tags: ['opa', 'rego'] },
-      spec: { type: 'opa-rego', domainId: 'test.domain', policyId: 'test-policy' },
+      spec: {
+        type: 'opa-rego',
+        domainId: 'test.domain',
+        policyId: 'test-policy',
+      },
     });
 
     const router = createRouter({
@@ -162,7 +166,11 @@ describe('createRouter', () => {
     it('evaluates a valid policy against input', async () => {
       const res = await request(app)
         .post('/evaluate')
-        .send({ domainId: 'test.domain', rego: validRego, input: { name: 'ok' } });
+        .send({
+          domainId: 'test.domain',
+          rego: validRego,
+          input: { name: 'ok' },
+        });
 
       expect(res.status).toBe(200);
       expect(res.body.result).toBeDefined();
@@ -175,7 +183,10 @@ describe('createRouter', () => {
         layers: {
           L1: { passed: true, errors: [] },
           L2: { passed: true, errors: [] },
-          L3: { passed: false, errors: [{ severity: 'error', message: 'bad' }] },
+          L3: {
+            passed: false,
+            errors: [{ severity: 'error', message: 'bad' }],
+          },
         },
       });
 
@@ -211,7 +222,10 @@ describe('createRouter', () => {
       expect(res.body.status).toBe('published');
       expect(res.body.revision).toBeDefined();
       expect(mockPolicyStore.save).toHaveBeenCalled();
-      expect(mockOpaClient.publishPolicy).toHaveBeenCalledWith('test-policy', validRego);
+      expect(mockOpaClient.publishPolicy).toHaveBeenCalledWith(
+        'test-policy',
+        validRego,
+      );
     });
 
     it('returns 422 when validation fails', async () => {
@@ -221,7 +235,10 @@ describe('createRouter', () => {
         layers: {
           L1: { passed: true, errors: [] },
           L2: { passed: true, errors: [] },
-          L3: { passed: false, errors: [{ severity: 'error', message: 'bad' }] },
+          L3: {
+            passed: false,
+            errors: [{ severity: 'error', message: 'bad' }],
+          },
         },
       });
 
