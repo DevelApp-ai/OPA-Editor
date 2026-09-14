@@ -10,6 +10,13 @@ import express from 'express';
 jest.mock('../service/validator');
 jest.mock('../catalog/policyEntity');
 
+import { createRouter } from '../service/router';
+import { validatePolicy } from '../service/validator';
+import { createPolicyEntity } from '../catalog/policyEntity';
+
+const mockValidatePolicy = validatePolicy as jest.Mock;
+const mockCreatePolicyEntity = createPolicyEntity as jest.Mock;
+
 const validRego = [
   '# METADATA',
   '# schemas:',
@@ -72,8 +79,7 @@ describe('createRouter', () => {
     };
 
     // Mock validatePolicy
-    const { validatePolicy } = require('../service/validator');
-    validatePolicy.mockResolvedValue({
+    mockValidatePolicy.mockResolvedValue({
       valid: true,
       errors: [],
       layers: {
@@ -84,15 +90,13 @@ describe('createRouter', () => {
     });
 
     // Mock createPolicyEntity
-    const { createPolicyEntity } = require('../catalog/policyEntity');
-    createPolicyEntity.mockReturnValue({
+    mockCreatePolicyEntity.mockReturnValue({
       apiVersion: 'backstage.io/v1beta1',
       kind: 'Resource',
       metadata: { name: 'test-policy', tags: ['opa', 'rego'] },
       spec: { type: 'opa-rego', domainId: 'test.domain', policyId: 'test-policy' },
     });
 
-    const { createRouter } = require('../service/router');
     const router = createRouter({
       domains: mockDomains,
       regalBridge: mockRegalBridge,
@@ -165,8 +169,7 @@ describe('createRouter', () => {
     });
 
     it('returns 422 when validation fails', async () => {
-      const { validatePolicy } = require('../service/validator');
-      validatePolicy.mockResolvedValueOnce({
+      mockValidatePolicy.mockResolvedValueOnce({
         valid: false,
         errors: [{ layer: 'L3-domain', severity: 'error', message: 'bad' }],
         layers: {
@@ -212,8 +215,7 @@ describe('createRouter', () => {
     });
 
     it('returns 422 when validation fails', async () => {
-      const { validatePolicy } = require('../service/validator');
-      validatePolicy.mockResolvedValueOnce({
+      mockValidatePolicy.mockResolvedValueOnce({
         valid: false,
         errors: [{ layer: 'L3-domain', severity: 'error', message: 'bad' }],
         layers: {

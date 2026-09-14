@@ -2,7 +2,6 @@
  * Unit tests for the DomainPicker component.
  */
 
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { DomainPicker } from '../components/DomainPicker';
 

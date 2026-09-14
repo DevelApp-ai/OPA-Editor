@@ -85,7 +85,7 @@ describe('parseSchema', () => {
         a: { type: 'string' },
       },
     });
-    const result = parseSchema(json);
+    const result = parseSchema(json) as { properties: { a: { type: string } } };
     expect(result.properties.a.type).toBe('string');
   });
 });

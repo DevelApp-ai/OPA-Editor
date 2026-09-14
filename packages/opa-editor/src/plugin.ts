@@ -4,20 +4,19 @@
  */
 
 import {
-  createFrontendPlugin,
+  createPlugin,
   createApiFactory,
   createRouteRef,
   discoveryApiRef,
   fetchApiRef,
-} from '@backstage/frontend-plugin-api';
+} from '@backstage/core-plugin-api';
 import { OpaEditorApiClient, opaEditorApiRef } from './api/OpaEditorApiClient';
 
 export const opaEditorRouteRef = createRouteRef({
   id: 'opa-editor',
-  path: '/opa-editor',
 });
 
-export const opaEditorFrontendPlugin = createFrontendPlugin({
+export const opaEditorFrontendPlugin = createPlugin({
   id: 'opa-editor',
   apis: [
     createApiFactory({
