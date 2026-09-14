@@ -5,12 +5,17 @@
 
 import {
   createFrontendPlugin,
-  createApiRef,
   createApiFactory,
+  createRouteRef,
   discoveryApiRef,
   fetchApiRef,
 } from '@backstage/frontend-plugin-api';
 import { OpaEditorApiClient, opaEditorApiRef } from './api/OpaEditorApiClient';
+
+export const opaEditorRouteRef = createRouteRef({
+  id: 'opa-editor',
+  path: '/opa-editor',
+});
 
 export const opaEditorFrontendPlugin = createFrontendPlugin({
   id: 'opa-editor',
@@ -23,14 +28,6 @@ export const opaEditorFrontendPlugin = createFrontendPlugin({
     }),
   ],
   routes: {
-    // The page is mounted at /opa-editor in the Backstage app.
-    // In the new frontend system, routeRefs are defined in the app package.
-    root: createRouteRef({
-      id: 'opa-editor',
-      path: '/opa-editor',
-    }),
+    root: opaEditorRouteRef,
   },
 });
-
-// Helper for the new frontend system route ref
-import { createRouteRef } from '@backstage/frontend-plugin-api';
