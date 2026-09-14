@@ -130,8 +130,16 @@ describe('validatePolicy', () => {
       },
     ]);
     const { validatePolicy } = await import('../service/validator.js');
+    // Use a policy that fails L3 so that errors from all three layers
+    // (L1-schema, L2-regal, L3-domain) are aggregated into result.errors.
+    const badRego = [
+      'package wrong.prefix',
+      '',
+      'default allow := false',
+      'allow if { true }',
+    ].join('\n');
     const result = await validatePolicy(
-      { domainId: 'test.domain', rego: validRego, domain: testDescriptor },
+      { domainId: 'test.domain', rego: badRego, domain: testDescriptor },
       mockRegalBridge,
       { opaBinaryPath: '/nonexistent/opa' },
     );

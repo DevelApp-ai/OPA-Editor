@@ -23,11 +23,11 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/__tests__/**/*.ts', '**/__tests__/**/*.tsx'],
+      files: ['**/*.test.ts', '**/*.test.tsx'],
       rules: {
-        // Tests use CommonJS require() for lazy/conditional imports.
+        // Integration tests load modules lazily via require()/dynamic import
         '@typescript-eslint/no-var-requires': 'off',
-        // Mocks and dynamically imported modules are intentionally any.
+        '@typescript-eslint/no-require-imports': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
       },
     },

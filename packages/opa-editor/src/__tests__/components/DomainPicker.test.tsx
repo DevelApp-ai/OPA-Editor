@@ -29,16 +29,26 @@ const mockDomains = [
 ];
 
 describe('DomainPicker', () => {
-  it('renders a select with domain titles', () => {
+  it('renders a select with domain options', () => {
     render(
       <DomainPicker
         domains={mockDomains as any}
-        selectedId="finops.costmodel"
+        selectedId={null}
         onSelect={jest.fn()}
       />,
     );
-    expect(screen.getByText('FinOps Cost Modeling (FOCUS v1.4)')).toBeInTheDocument();
-    expect(screen.getByText('Security Access Control')).toBeInTheDocument();
+
+    // Open the MUI Select dropdown
+    fireEvent.mouseDown(screen.getByRole('combobox'));
+
+    expect(
+      screen.getByRole('option', {
+        name: 'FinOps Cost Modeling (FOCUS v1.4)',
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('option', { name: 'Security Access Control' }),
+    ).toBeInTheDocument();
   });
 
   it('calls onSelect when a domain is selected', () => {
@@ -46,37 +56,39 @@ describe('DomainPicker', () => {
     render(
       <DomainPicker
         domains={mockDomains as any}
-        selectedId="finops.costmodel"
+        selectedId={null}
         onSelect={onSelect}
       />,
     );
 
-    // The Select component should trigger onChange
-    const select = screen.getByDisplayValue('FinOps Cost Modeling (FOCUS v1.4)');
-    fireEvent.mouseDown(select);
+    fireEvent.mouseDown(screen.getByRole('combobox'));
+    fireEvent.click(
+      screen.getByRole('option', { name: 'Security Access Control' }),
+    );
+
+    expect(onSelect).toHaveBeenCalledWith('security.access');
   });
 
   it('handles empty domains list', () => {
     render(
-      <DomainPicker
-        domains={[]}
-        selectedId={null}
-        onSelect={jest.fn()}
-      />,
+      <DomainPicker domains={[]} selectedId={null} onSelect={jest.fn()} />,
     );
     // Should render without crashing
     expect(screen.queryByText('FinOps')).not.toBeInTheDocument();
   });
 
-  it('handles null selectedId', () => {
+  it('shows the selected domain as the display value', () => {
     render(
       <DomainPicker
         domains={mockDomains as any}
-        selectedId={null}
+        selectedId="finops.costmodel"
         onSelect={jest.fn()}
       />,
     );
-    // Should render without crashing
-    expect(screen.getByText('FinOps Cost Modeling (FOCUS v1.4)')).toBeInTheDocument();
+
+    // MUI renders the selected MenuItem's text in the Select display
+    expect(
+      screen.getByText('FinOps Cost Modeling (FOCUS v1.4)'),
+    ).toBeInTheDocument();
   });
 });

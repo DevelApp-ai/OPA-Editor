@@ -5,7 +5,7 @@
  * are not available. In CI, OPA and Regal are installed via the workflow.
  */
 
-import { writeFileSync, mkdtempSync } from 'fs';
+import { writeFileSync, mkdtempSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 
@@ -40,11 +40,17 @@ skipIfNoRegal('Regal integration', () => {
   it('lints a valid Rego file with zero violations', async () => {
     const bridge = new RegalBridge({ binaryPath: REGAL_BINARY });
     const tmpDir = mkdtempSync(join(tmpdir(), 'regal-int-'));
-    const tmpFile = join(tmpDir, 'policy.rego');
+    // Regal's directory-structure rule expects the file path to mirror the
+    // package path. Write the fixture under a matching subdirectory and lint
+    // the temp directory itself, so the relative path is test/policy.rego.
+    mkdirSync(join(tmpDir, 'test'), { recursive: true });
+    const tmpFile = join(tmpDir, 'test', 'policy.rego');
     writeFileSync(tmpFile, 'package test\n\ndefault allow := true\n', 'utf-8');
 
-    const diagnostics = await bridge.lintFileSync(tmpFile);
-    expect(diagnostics.filter((d: any) => d.severity === 'error')).toHaveLength(0);
+    const diagnostics = await bridge.lintFileSync(tmpDir);
+    expect(
+      diagnostics.filter((d: any) => d.severity === 'error'),
+    ).toHaveLength(0);
   });
 
   it('reports violations for a bad Rego file', async () => {
@@ -63,6 +69,7 @@ skipIfNoOPA('OPA integration', () => {
     const tmpDir = mkdtempSync(join(tmpdir(), 'opa-int-'));
     const regoFile = join(tmpDir, 'policy.rego');
     const schemaFile = join(tmpDir, 'schema.json');
+    const inputFile = join(tmpDir, 'input.json');
 
     writeFileSync(regoFile, [
       'package test.domain',
@@ -77,13 +84,16 @@ skipIfNoOPA('OPA integration', () => {
       properties: { name: { type: 'string' } },
     }), 'utf-8');
 
+    // Write the input to a temp file — reading from /dev/stdin is unreliable
+    // in CI (spawnSync piping).
+    writeFileSync(inputFile, JSON.stringify({ name: 'ok' }), 'utf-8');
+
     const { spawnSync } = require('child_process');
     const result = spawnSync(OPA_BINARY, [
-      'eval', '--data', regoFile, '--input', '/dev/stdin',
+      'eval', '--data', regoFile, '--input', inputFile,
       '--schema', schemaFile,
       'data.test.domain.allow',
     ], {
-      input: JSON.stringify({ name: 'ok' }),
       stdio: ['pipe', 'pipe', 'pipe'],
       timeout: 10000,
     });

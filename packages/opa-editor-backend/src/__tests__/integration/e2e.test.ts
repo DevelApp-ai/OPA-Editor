@@ -6,7 +6,7 @@
  *
  * Requires:
  * - OPA binary (OPA_BINARY_PATH env var or 'opa' in PATH)
- * - OPA server running (OPA_SERVER_URL env var or http://localhost:8181)
+ * - OPA server running (OPA_SERVER_URL env var, or a local one is started)
  */
 
 import { spawn, ChildProcess } from 'child_process';
@@ -15,7 +15,10 @@ import { join } from 'path';
 import { tmpdir } from 'os';
 
 const OPA_BINARY = process.env.OPA_BINARY_PATH ?? 'opa';
-const OPA_SERVER_URL = process.env.OPA_SERVER_URL ?? 'http://localhost:8181';
+const OPA_SERVER_URL = process.env.OPA_SERVER_URL ?? '';
+// Bind the locally-started OPA server to an explicit IPv4 address —
+// 'localhost' can resolve to ::1 first, which the server may not listen on.
+const LOCAL_OPA_URL = 'http://127.0.0.1:8181';
 
 function binaryAvailable(bin: string): boolean {
   try {
@@ -51,6 +54,23 @@ const validRego = [
   '}',
 ].join('\n');
 
+/** Poll the OPA server until it responds on /health, up to timeoutMs. */
+async function waitForOpa(url: string, timeoutMs: number): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const resp = await fetch(`${url}/health`);
+      if (resp.ok) {
+        return true;
+      }
+    } catch {
+      // Server not accepting connections yet — keep polling
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  return false;
+}
+
 e2eDescribe('E2E: author → validate → publish → verify', () => {
   let opaProcess: ChildProcess | null = null;
   let opaUrl: string;
@@ -63,16 +83,27 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
     GitOpsPolicyStore = (await import('../../service/policyStore.js'))
       .GitOpsPolicyStore;
 
-    // Start OPA server
-    opaUrl = OPA_SERVER_URL;
-    if (opaUrl === 'http://localhost:8181') {
-      // Start our own OPA server
-      opaProcess = spawn(OPA_BINARY, ['server'], {
+    // Start OPA server (unless an external one was configured via env)
+    opaUrl = OPA_SERVER_URL || LOCAL_OPA_URL;
+    if (!OPA_SERVER_URL) {
+      opaProcess = spawn(OPA_BINARY, ['server', '--addr', '127.0.0.1:8181'], {
         stdio: ['pipe', 'pipe', 'pipe'],
         detached: false,
       });
-      // Wait for OPA to be ready
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      let opaStderr = '';
+      opaProcess.stderr?.on('data', (data) => {
+        opaStderr += data.toString();
+      });
+
+      // Wait for OPA to be ready instead of sleeping for a fixed time
+      const ready = await waitForOpa(opaUrl, 20000);
+      if (!ready) {
+        throw new Error(
+          `OPA server did not become ready at ${opaUrl}. ` +
+            `stderr: ${opaStderr.slice(-500)}`,
+        );
+      }
     }
 
     // Create temp Git repo for GitOps
