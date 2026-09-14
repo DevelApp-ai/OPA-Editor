@@ -71,10 +71,11 @@ skipIfNoOPA('OPA integration', () => {
     const schemaFile = join(tmpDir, 'schema.json');
     const inputFile = join(tmpDir, 'input.json');
 
+    // No METADATA schema annotation here: when --schema is passed, OPA
+    // enforces schema annotations, and `schema["test"]` has no matching
+    // schema in the set (the bare file's id is not "test"), which is
+    // itself a compile error ("undefined schema").
     const rego = [
-      '# METADATA',
-      '# schemas:',
-      '#   - input: schema["test"]',
       'package test.domain',
       '',
       'default allow := false',
@@ -109,7 +110,14 @@ skipIfNoOPA('OPA integration', () => {
       timeout: 10000,
     });
 
-    expect(result.status).toBe(0);
+    // opa eval reports compile/type errors as JSON on stdout (exit code 2),
+    // not on stderr — include both streams when surfacing a failure.
+    if (result.status !== 0) {
+      throw new Error(
+        `opa eval failed (${result.status}): ` +
+          `${result.stdout.toString()}${result.stderr.toString()}`,
+      );
+    }
     const output = JSON.parse(result.stdout.toString());
     expect(output.result[0].expressions[0].value).toBe(true);
   });
@@ -122,10 +130,9 @@ skipIfNoOPA('OPA integration', () => {
 
     // No METADATA schema annotation here: a bare schema file passed via
     // --schema types `input` globally, so referencing a field that is not
-    // in the schema produces a rego_type_error. (A by-reference annotation
-    // like `input: schema["test"]` would override the global schema with a
-    // schema id that doesn't exist in the set, silently disabling type
-    // checking.)
+    // in the schema produces a rego_type_error. (An annotation referencing
+    // a schema id not in the set, like schema["test"], would fail
+    // compilation with "undefined schema" and mask the type error.)
     const rego = [
       'package test.domain',
       '',
@@ -157,9 +164,11 @@ skipIfNoOPA('OPA integration', () => {
       timeout: 10000,
     });
 
-    // OPA should report a type error on stderr and exit non-zero
+    // OPA exits non-zero on the type error. Note that opa eval prints
+    // compile and type errors as JSON on STDOUT, not on stderr, so both
+    // streams are checked here.
     expect(result.status).not.toBe(0);
-    const stderr = result.stderr.toString();
-    expect(stderr).toContain('rego_type_error');
+    const output = `${result.stdout.toString()}${result.stderr.toString()}`;
+    expect(output).toContain('rego_type_error');
   });
 });
