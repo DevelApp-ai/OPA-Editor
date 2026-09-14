@@ -180,7 +180,9 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
     });
 
     expect(resp.ok).toBe(true);
-    const policy = await resp.json();
+    // The Policy GET API wraps the policy object in a "result" field.
+    const body = await resp.json();
+    const policy = body.result;
     expect(policy.id).toBe('e2e-test-policy');
     expect(policy.raw).toContain('package test.domain.e2e');
   });
