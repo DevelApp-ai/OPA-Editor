@@ -3,6 +3,13 @@
  * Mocks fetch and discoveryApi.
  */
 
+// @backstage/core-plugin-api ships ESM ("type": "module"-style dist files)
+// that jest/ts-jest in CJS mode cannot parse, so we mock the module instead
+// of loading it. The API client only needs createApiRef at import time.
+jest.mock('@backstage/core-plugin-api', () => ({
+  createApiRef: (config: { id: string }) => ({ id: config.id }),
+}));
+
 describe('OpaEditorApiClient', () => {
   let OpaEditorApiClient: any;
   let mockFetch: jest.Mock;
