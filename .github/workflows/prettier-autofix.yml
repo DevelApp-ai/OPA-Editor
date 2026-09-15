@@ -1,12 +1,11 @@
 name: Prettier Autoformat
 
-# Temporary one-shot helper: runs the repo's own prettier on the branch and
-# commits the canonical formatting, so format:check passes without
-# hand-formatting. Will be reduced to manual-only triggering afterwards.
+# Manual helper: runs the repo's own prettier on the branch and commits the
+# canonical formatting. The one-shot run that normalized this branch's
+# formatting is done; this now only runs from the Actions tab.
 
 on:
-  push:
-    branches: [feat/phase-6-testing-ci-docs]
+  workflow_dispatch:
 
 permissions:
   contents: write
