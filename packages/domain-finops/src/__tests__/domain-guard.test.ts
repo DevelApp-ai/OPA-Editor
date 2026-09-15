@@ -33,7 +33,9 @@ describe('finopsCostModelDomain', () => {
     it('accepts a valid FOCUS-aligned Rego module', () => {
       const result = finopsCostModelDomain.validateDomain(validRego);
       expect(result.valid).toBe(true);
-      expect(result.errors.filter((e) => e.severity === 'error')).toHaveLength(0);
+      expect(result.errors.filter((e) => e.severity === 'error')).toHaveLength(
+        0,
+      );
     });
 
     it('rejects a wrong package prefix', () => {
@@ -45,7 +47,9 @@ describe('finopsCostModelDomain', () => {
       expect(result.valid).toBe(false);
       expect(
         result.errors.some((e) =>
-          e.message.includes('does not match required prefix "finops.costmodel"'),
+          e.message.includes(
+            'does not match required prefix "finops.costmodel"',
+          ),
         ),
       ).toBe(true);
     });
@@ -151,7 +155,9 @@ describe('finopsCostModelDomain', () => {
     });
 
     it('requires the correct package prefix', () => {
-      expect(finopsCostModelDomain.requiredPackagePrefix).toBe('finops.costmodel');
+      expect(finopsCostModelDomain.requiredPackagePrefix).toBe(
+        'finops.costmodel',
+      );
     });
 
     it('requires allow, deny, and report rules', () => {

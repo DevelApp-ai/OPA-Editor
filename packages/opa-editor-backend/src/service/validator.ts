@@ -9,7 +9,6 @@
  */
 
 import { spawn } from 'child_process';
-import { promisify } from 'util';
 import { writeFileSync, unlinkSync, mkdtempSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
@@ -17,12 +16,9 @@ import { tmpdir } from 'os';
 import type {
   DomainDescriptor,
   DomainError,
-  DomainValidationResult,
 } from '@develapp/opa-domain-contract';
 import { validateDomain } from '@develapp/opa-domain-contract';
 import type { RegalBridge, RegalDiagnostic } from './regalBridge';
-
-const execAsync = promisify(spawn);
 
 export interface ValidatorOptions {
   /** Path to the OPA binary. Defaults to 'opa'. */
@@ -151,14 +147,10 @@ async function runOpaTypeCheck(
   // Write the schema file (placeholder — in production, load from domain package)
   const schemaFile = join(tmpDir, 'schema.json');
   // The domain's schema should be available; for now we use a minimal schema
-  writeFileSync(
-    schemaFile,
-    JSON.stringify({ type: 'object' }),
-    'utf-8',
-  );
+  writeFileSync(schemaFile, JSON.stringify({ type: 'object' }), 'utf-8');
 
   try {
-    const { stdout, stderr } = await runCommand(opaBinary, [
+    const { stderr } = await runCommand(opaBinary, [
       'eval',
       '--schema',
       schemaFile,
@@ -173,8 +165,15 @@ async function runOpaTypeCheck(
     }
 
     return [];
-  } catch (err: any) {
-    const output = err.stderr ?? err.message ?? '';
+  } catch (err) {
+    let output = '';
+    if (typeof err === 'object' && err !== null && 'stderr' in err) {
+      output = String((err as { stderr?: unknown }).stderr ?? '');
+    } else if (err instanceof Error) {
+      output = err.message;
+    } else {
+      output = String(err);
+    }
     if (output.includes('type_error') || output.includes('rego_type_error')) {
       return parseOpaErrors(output, 'L1-schema');
     }
@@ -194,17 +193,19 @@ async function runOpaTypeCheck(
 function toDomainError(d: RegalDiagnostic): DomainError {
   return {
     layer: 'L2-regal',
-    severity: d.severity === 'info' ? 'info' : d.severity === 'error' ? 'error' : 'warning',
+    severity:
+      d.severity === 'info'
+        ? 'info'
+        : d.severity === 'error'
+          ? 'error'
+          : 'warning',
     message: d.message,
     range: d.range,
   };
 }
 
 /** Parse OPA error output into DomainErrors. */
-function parseOpaErrors(
-  output: string,
-  layer: 'L1-schema',
-): DomainError[] {
+function parseOpaErrors(output: string, layer: 'L1-schema'): DomainError[] {
   const errors: DomainError[] = [];
   const lines = output.split('\n');
   for (const line of lines) {

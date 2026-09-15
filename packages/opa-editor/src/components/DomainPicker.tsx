@@ -4,13 +4,7 @@
  */
 
 import React from 'react';
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@material-ui/core';
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import type { DomainDescriptor } from '@develapp/opa-domain-contract';
 
 interface DomainPickerProps {
@@ -25,7 +19,7 @@ export const DomainPicker: React.FC<DomainPickerProps> = ({
   onSelect,
 }) => {
   return (
-    <Box mb={2}>
+    <Box sx={{ mb: 2 }}>
       <FormControl fullWidth variant="outlined" size="small">
         <InputLabel>Domain</InputLabel>
         <Select

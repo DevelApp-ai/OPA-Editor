@@ -14,13 +14,19 @@
  * See design spec §6.
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
-import { Button, Grid, Box, CircularProgress } from '@material-ui/core';
+import { Button, Grid, Box, CircularProgress } from '@mui/material';
 
-import { opaEditorApiRef, type PublishMetadata } from '../api/OpaEditorApiClient';
+import {
+  opaEditorApiRef,
+  type PublishMetadata,
+} from '../api/OpaEditorApiClient';
 import { listDomains } from '../api/domainRegistry';
-import type { DomainDescriptor, DomainError } from '@develapp/opa-domain-contract';
+import type {
+  DomainDescriptor,
+  DomainError,
+} from '@develapp/opa-domain-contract';
 import { DomainPicker } from './DomainPicker';
 import { RegoEditor } from './RegoEditor';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
@@ -65,12 +71,9 @@ export const OpaEditorPage: React.FC = () => {
 
   const selectedDomain = domains.find((d) => d.id === selectedDomainId) ?? null;
 
-  const handleValidate = useCallback(
-    async (errors: DomainError[]) => {
-      setLiveErrors(errors);
-    },
-    [],
-  );
+  const handleValidate = useCallback(async (errors: DomainError[]) => {
+    setLiveErrors(errors);
+  }, []);
 
   const handleServerValidate = useCallback(async () => {
     if (!selectedDomainId || !rego) return;
@@ -78,12 +81,13 @@ export const OpaEditorPage: React.FC = () => {
     try {
       const result = await api.validate(selectedDomainId, rego);
       setServerErrors(result.errors);
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       setServerErrors([
         {
           layer: 'L3-domain',
           severity: 'error',
-          message: `Backend validation failed: ${err.message}`,
+          message: `Backend validation failed: ${message}`,
         },
       ]);
     } finally {
@@ -108,8 +112,9 @@ export const OpaEditorPage: React.FC = () => {
         setPublishResult(`✗ Rejected — ${result.errors.length} errors`);
         setServerErrors(result.errors);
       }
-    } catch (err: any) {
-      setPublishResult(`✗ Error: ${err.message}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setPublishResult(`✗ Error: ${message}`);
     } finally {
       setPublishing(false);
     }
@@ -118,7 +123,7 @@ export const OpaEditorPage: React.FC = () => {
   const allErrors = [...liveErrors, ...serverErrors];
 
   return (
-    <Box p={3}>
+    <Box sx={{ p: 3 }}>
       <Grid container spacing={2}>
         {/* Domain picker */}
         <Grid item xs={12}>
@@ -143,16 +148,13 @@ export const OpaEditorPage: React.FC = () => {
 
         <Grid item xs={4}>
           <Box style={{ height: 500, overflow: 'auto' }}>
-            <DiagnosticsPanel
-              errors={allErrors}
-              loading={validating}
-            />
+            <DiagnosticsPanel errors={allErrors} loading={validating} />
           </Box>
         </Grid>
 
         {/* Action buttons */}
         <Grid item xs={12}>
-          <Box display="flex" gap={1} alignItems="center">
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Button
               variant="outlined"
               color="primary"
@@ -170,7 +172,7 @@ export const OpaEditorPage: React.FC = () => {
               {publishing ? <CircularProgress size={20} /> : 'Publish'}
             </Button>
             {publishResult && (
-              <Box ml={2}>
+              <Box sx={{ ml: 2 }}>
                 <span>{publishResult}</span>
               </Box>
             )}

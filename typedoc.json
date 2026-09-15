@@ -1,0 +1,17 @@
+{
+  "entryPoints": [
+    "packages/domain-contract/src/index.ts",
+    "packages/domain-finops/src/index.ts",
+    "packages/opa-editor/src/index.ts",
+    "packages/opa-editor-backend/src/index.ts"
+  ],
+  "out": "docs/api-reference",
+  "tsconfig": "tsconfig.json",
+  "readme": "docs/api-reference.md",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "categorizeByGroup": true,
+  "categoryOrder": ["Types", "Functions", "Classes", "*"],
+  "gitRevision": "main"
+}

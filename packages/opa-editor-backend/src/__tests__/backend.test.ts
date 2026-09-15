@@ -7,7 +7,7 @@
 
 describe('GitOpsPolicyStore', () => {
   it('constructs with correct options', async () => {
-    const { GitOpsPolicyStore } = await import('../service/policyStore');
+    const { GitOpsPolicyStore } = await import('../service/policyStore.js');
     const store = new GitOpsPolicyStore({
       repoPath: '/tmp/test-policies',
       policiesDir: 'policies',
@@ -18,7 +18,7 @@ describe('GitOpsPolicyStore', () => {
 
 describe('OpaClient', () => {
   it('constructs with correct options', async () => {
-    const { OpaClient } = await import('../service/opaClient');
+    const { OpaClient } = await import('../service/opaClient.js');
     const client = new OpaClient({
       baseUrl: 'http://localhost:8181',
       token: 'test-token',
@@ -29,7 +29,7 @@ describe('OpaClient', () => {
 
 describe('createPolicyEntity', () => {
   it('creates a Resource entity with type opa-rego', async () => {
-    const { createPolicyEntity } = await import('../catalog/policyEntity');
+    const { createPolicyEntity } = await import('../catalog/policyEntity.js');
     const entity = createPolicyEntity({
       policyId: 'cost-guard-aws',
       domainId: 'finops.costmodel',
@@ -49,7 +49,7 @@ describe('createPolicyEntity', () => {
   });
 
   it('sanitizes the entity name', async () => {
-    const { createPolicyEntity } = await import('../catalog/policyEntity');
+    const { createPolicyEntity } = await import('../catalog/policyEntity.js');
     const entity = createPolicyEntity({
       policyId: 'My_Policy_123!',
       domainId: 'finops.costmodel',
@@ -62,7 +62,7 @@ describe('createPolicyEntity', () => {
 
 describe('permissions', () => {
   it('exports the expected permission names', async () => {
-    const { opaEditorPermissions } = await import('../permissions');
+    const { opaEditorPermissions } = await import('../permissions.js');
     const names = opaEditorPermissions.map((p) => p.name);
     expect(names).toContain('opa-editor.policy.publish');
     expect(names).toContain('opa-editor.policy.evaluate');

@@ -5,7 +5,10 @@
  * See design spec §7.1.
  */
 
-import { createBackendPlugin, coreServices } from '@backstage/backend-plugin-api';
+import {
+  createBackendPlugin,
+  coreServices,
+} from '@backstage/backend-plugin-api';
 import { createRouter } from './service/router';
 import { RegalBridge } from './service/regalBridge';
 import { OpaClient } from './service/opaClient';
@@ -38,19 +41,21 @@ export const opaEditorBackendPlugin = createBackendPlugin({
         httpRouter: coreServices.httpRouter,
         config: coreServices.rootConfig,
         logger: coreServices.logger,
-        permissions: coreServices.permissions,
       },
-      async init({ httpRouter, config, logger, permissions }) {
+      async init({ httpRouter, config, logger }) {
         // --- Load domain descriptors ---
         // In production, domains are dynamically imported from config.
         // For now, we support a registry pattern.
         const domains = new Map<string, DomainDescriptor>();
 
-        const domainConfigs = config.getOptionalConfigArray('opa-editor.domains') ?? [];
+        const domainConfigs =
+          config.getOptionalConfigArray('opa-editor.domains') ?? [];
         for (const dc of domainConfigs) {
           const id = dc.getString('id');
           const packageName = dc.getOptionalString('package');
-          logger.info(`Configured domain: ${id} (package: ${packageName ?? 'none'})`);
+          logger.info(
+            `Configured domain: ${id} (package: ${packageName ?? 'none'})`,
+          );
           // Domain packages are loaded at app composition time
           // and passed via the domains Map.
         }
@@ -62,8 +67,9 @@ export const opaEditorBackendPlugin = createBackendPlugin({
         try {
           await regalBridge.start();
           logger.info('Regal LSP bridge started');
-        } catch (err: any) {
-          logger.warn(`Regal LSP bridge failed to start: ${err.message}`);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          logger.warn(`Regal LSP bridge failed to start: ${message}`);
         }
 
         // --- Create OPA client (direct REST) ---
@@ -71,20 +77,27 @@ export const opaEditorBackendPlugin = createBackendPlugin({
           config.getOptionalString('opa-editor.opa.baseUrl') ??
           'http://localhost:8181';
         const opaToken = config.getOptionalString('opa-editor.opa.token');
-        const opaClient = new OpaClient({ baseUrl: opaBaseUrl, token: opaToken });
+        const opaClient = new OpaClient({
+          baseUrl: opaBaseUrl,
+          token: opaToken,
+        });
 
         // --- Create GitOps policy store ---
         const repoPath =
           config.getOptionalString('opa-editor.gitops.repoPath') ??
           '/tmp/opa-policies';
         const policiesDir =
-          config.getOptionalString('opa-editor.gitops.policiesDir') ?? 'policies';
+          config.getOptionalString('opa-editor.gitops.policiesDir') ??
+          'policies';
         const policyStore = new GitOpsPolicyStore({
           repoPath,
           policiesDir,
           authorName: config.getOptionalString('opa-editor.gitops.authorName'),
-          authorEmail: config.getOptionalString('opa-editor.gitops.authorEmail'),
-          branch: config.getOptionalString('opa-editor.gitops.branch') ?? 'main',
+          authorEmail: config.getOptionalString(
+            'opa-editor.gitops.authorEmail',
+          ),
+          branch:
+            config.getOptionalString('opa-editor.gitops.branch') ?? 'main',
         });
 
         // --- Authorize helper ---

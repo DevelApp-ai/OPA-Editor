@@ -1,0 +1,45 @@
+name: Prettier Autoformat
+
+# Manual helper: runs the repo's own prettier on the branch and commits the
+# canonical formatting. The one-shot run that normalized this branch's
+# formatting is done; this now only runs from the Actions tab.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    name: Apply prettier formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Apply prettier
+        run: npx prettier --write 'packages/**/src/**/*.{ts,tsx,json}'
+
+      - name: Show resulting diff
+        if: always()
+        run: git --no-pager diff || true
+
+      - name: Commit formatting changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- packages
+          if git diff --cached --quiet; then
+            echo "Nothing to format - tree is already prettier-clean"
+          else
+            git commit -m "style: apply prettier formatting [skip ci]"
+            git push origin HEAD:refs/heads/feat/phase-6-testing-ci-docs
+          fi

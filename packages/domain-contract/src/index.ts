@@ -16,8 +16,4 @@ export type {
 } from './types';
 
 export { validateDomain } from './validateDomain';
-export {
-  schemaHash,
-  extractSchemaFields,
-  parseSchema,
-} from './schemaUtils';
+export { schemaHash, extractSchemaFields, parseSchema } from './schemaUtils';

@@ -12,7 +12,7 @@ import {
   Chip,
   Box,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 interface DiagnosticsPanelProps {
   errors: DomainError[];
@@ -37,8 +37,8 @@ export const DiagnosticsPanel: React.FC<DiagnosticsPanelProps> = ({
 }) => {
   if (loading) {
     return (
-      <Box p={2}>
-        <Typography variant="body2" color="textSecondary">
+      <Box sx={{ p: 2 }}>
+        <Typography variant="body2" color="text.secondary">
           Validating…
         </Typography>
       </Box>
@@ -47,7 +47,7 @@ export const DiagnosticsPanel: React.FC<DiagnosticsPanelProps> = ({
 
   if (errors.length === 0) {
     return (
-      <Box p={2}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="body2" style={{ color: '#4caf50' }}>
           ✓ No issues found
         </Typography>
@@ -68,7 +68,7 @@ export const DiagnosticsPanel: React.FC<DiagnosticsPanelProps> = ({
         Diagnostics ({errors.length})
       </Typography>
       {Object.entries(grouped).map(([layer, layerErrors]) => (
-        <Box key={layer} mb={1}>
+        <Box key={layer} sx={{ mb: 1 }}>
           <Chip
             size="small"
             label={layerLabel[layer] ?? layer}

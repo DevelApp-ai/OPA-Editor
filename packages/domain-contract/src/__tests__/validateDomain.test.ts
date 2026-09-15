@@ -71,7 +71,9 @@ describe('validateDomain', () => {
     const result = validateDomain(rego, testDescriptor);
     expect(result.valid).toBe(false);
     expect(
-      result.errors.some((e) => e.message.includes("Missing required rule 'allow'")),
+      result.errors.some((e) =>
+        e.message.includes("Missing required rule 'allow'"),
+      ),
     ).toBe(true);
   });
 
@@ -89,7 +91,9 @@ describe('validateDomain', () => {
     const result = validateDomain(rego, testDescriptor);
     expect(result.valid).toBe(false);
     expect(
-      result.errors.some((e) => e.message.includes('Disallowed data references')),
+      result.errors.some((e) =>
+        e.message.includes('Disallowed data references'),
+      ),
     ).toBe(true);
   });
 
