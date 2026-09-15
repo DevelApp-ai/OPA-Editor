@@ -28,7 +28,13 @@ jobs:
         run: npm run lint
 
       - name: Format check
-        run: npm run format:check
+        run: |
+          if ! npm run format:check; then
+            echo "::error title=Formatting::Prettier would apply the diff below"
+            npx prettier --write 'packages/**/src/**/*.{ts,tsx,json}' > /dev/null
+            git --no-pager diff
+            exit 1
+          fi
 
   unit-tests:
     name: Unit Tests
