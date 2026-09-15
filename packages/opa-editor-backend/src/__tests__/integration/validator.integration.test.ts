@@ -34,7 +34,7 @@ skipIfNoRegal('Regal integration', () => {
   let RegalBridge: any;
 
   beforeAll(async () => {
-    RegalBridge = (require('../../service/regalBridge')).RegalBridge;
+    RegalBridge = require('../../service/regalBridge').RegalBridge;
   });
 
   it('lints a valid Rego file with zero violations', async () => {
@@ -48,9 +48,9 @@ skipIfNoRegal('Regal integration', () => {
     writeFileSync(tmpFile, 'package test\n\ndefault allow := true\n', 'utf-8');
 
     const diagnostics = await bridge.lintFileSync(tmpDir);
-    expect(
-      diagnostics.filter((d: any) => d.severity === 'error'),
-    ).toHaveLength(0);
+    expect(diagnostics.filter((d: any) => d.severity === 'error')).toHaveLength(
+      0,
+    );
   });
 
   it('reports violations for a bad Rego file', async () => {

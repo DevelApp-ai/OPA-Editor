@@ -78,10 +78,7 @@ export const RegoEditor: React.FC<RegoEditorProps> = ({
       if (!langs.some((l) => l.id === 'rego')) {
         monaco.languages.register({ id: 'rego' });
 
-        monaco.languages.setMonarchTokensProvider(
-          'rego',
-          regoMonarchLanguage,
-        );
+        monaco.languages.setMonarchTokensProvider('rego', regoMonarchLanguage);
 
         // Set language configuration (brackets, auto-closing)
         monaco.languages.setLanguageConfiguration('rego', {

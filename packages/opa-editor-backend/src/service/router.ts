@@ -167,9 +167,7 @@ export function createRouter(options: RouterOptions): Router {
       regalBridge,
     );
     if (!validationResult.valid) {
-      logger.warn(
-        `Publish rejected — validation failed for ${policyId}`,
-      );
+      logger.warn(`Publish rejected — validation failed for ${policyId}`);
       res.status(422).json({
         status: 'rejected',
         errors: validationResult.errors,

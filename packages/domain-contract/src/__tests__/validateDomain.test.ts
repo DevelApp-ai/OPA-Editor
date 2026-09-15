@@ -109,8 +109,8 @@ describe('validateDomain', () => {
     const result = validateDomain(rego, testDescriptor);
     expect(result.valid).toBe(true);
     expect(
-      result.errors.some((e) =>
-        e.severity === 'info' && e.message.includes('METADATA'),
+      result.errors.some(
+        (e) => e.severity === 'info' && e.message.includes('METADATA'),
       ),
     ).toBe(true);
   });

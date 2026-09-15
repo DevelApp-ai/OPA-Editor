@@ -2,8 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://develapp.ai/schemas/finops-focus-v1.4.json",
   "title": "FinOps FOCUS Cost Model Input (v1.4)",
-  "description":
-    "Input schema derived from the FinOps Foundation FOCUS specification v1.4. See https://focus.finops.org/docs/specification/v1-4/",
+  "description": "Input schema derived from the FinOps Foundation FOCUS specification v1.4. See https://focus.finops.org/docs/specification/v1-4/",
   "type": "object",
   "properties": {
     "BillingCurrency": {
@@ -28,8 +27,7 @@
     },
     "EffectiveCost": {
       "type": "number",
-      "description":
-        "The amortized/normalized cost after discounts and commitments"
+      "description": "The amortized/normalized cost after discounts and commitments"
     },
     "ListCost": {
       "type": "number",
@@ -41,18 +39,15 @@
     },
     "ServiceName": {
       "type": "string",
-      "description":
-        "The name of the cloud service, e.g. 'AWS EC2', 'Azure Virtual Machines'"
+      "description": "The name of the cloud service, e.g. 'AWS EC2', 'Azure Virtual Machines'"
     },
     "ServiceCategory": {
       "type": "string",
-      "description":
-        "The category of the service, e.g. 'Compute', 'Storage', 'Network'"
+      "description": "The category of the service, e.g. 'Compute', 'Storage', 'Network'"
     },
     "ServiceProvider": {
       "type": "string",
-      "description":
-        "Identifier for the cloud provider, e.g. 'AWS', 'Azure', 'GCP'"
+      "description": "Identifier for the cloud provider, e.g. 'AWS', 'Azure', 'GCP'"
     },
     "ServiceProviderName": {
       "type": "string",
@@ -68,8 +63,7 @@
     },
     "ResourceStatus": {
       "type": "string",
-      "description":
-        "Status of the resource, e.g. 'Active', 'Idle', 'Terminated'"
+      "description": "Status of the resource, e.g. 'Active', 'Idle', 'Terminated'"
     },
     "ChargePeriodStart": {
       "type": "string",
@@ -135,8 +129,7 @@
     },
     "CommitmentDiscountType": {
       "type": "string",
-      "description":
-        "Type of commitment, e.g. 'Reserved Instance', 'Savings Plan'",
+      "description": "Type of commitment, e.g. 'Reserved Instance', 'Savings Plan'",
       "enum": [
         "Reserved Instance",
         "Savings Plan",

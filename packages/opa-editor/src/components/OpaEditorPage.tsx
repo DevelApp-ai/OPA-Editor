@@ -71,12 +71,9 @@ export const OpaEditorPage: React.FC = () => {
 
   const selectedDomain = domains.find((d) => d.id === selectedDomainId) ?? null;
 
-  const handleValidate = useCallback(
-    async (errors: DomainError[]) => {
-      setLiveErrors(errors);
-    },
-    [],
-  );
+  const handleValidate = useCallback(async (errors: DomainError[]) => {
+    setLiveErrors(errors);
+  }, []);
 
   const handleServerValidate = useCallback(async () => {
     if (!selectedDomainId || !rego) return;
@@ -104,8 +101,7 @@ export const OpaEditorPage: React.FC = () => {
     setPublishResult(null);
     try {
       const metadata: PublishMetadata = {
-        policyId:
-          `policy-${selectedDomainId.replace(/\./g, '-')}-${Date.now()}`,
+        policyId: `policy-${selectedDomainId.replace(/\./g, '-')}-${Date.now()}`,
         version: '1.0.0',
         description: `OPA Rego policy for ${selectedDomain?.title}`,
       };
@@ -152,10 +148,7 @@ export const OpaEditorPage: React.FC = () => {
 
         <Grid item xs={4}>
           <Box style={{ height: 500, overflow: 'auto' }}>
-            <DiagnosticsPanel
-              errors={allErrors}
-              loading={validating}
-            />
+            <DiagnosticsPanel errors={allErrors} loading={validating} />
           </Box>
         </Grid>
 

@@ -14,12 +14,41 @@ import type {
  */
 export const regoMonarchLanguage = {
   keywords: [
-    'package', 'import', 'as', 'if', 'else', 'not', 'with', 'default',
-    'false', 'true', 'null', 'some', 'in', 'contains', 'every',
+    'package',
+    'import',
+    'as',
+    'if',
+    'else',
+    'not',
+    'with',
+    'default',
+    'false',
+    'true',
+    'null',
+    'some',
+    'in',
+    'contains',
+    'every',
   ],
   operators: [
-    '=', ':=', '==', '!=', '<', '>', '<=', '>=', '+', '-', '*', '/', '%',
-    '&', '|', '^', 'and', 'or',
+    '=',
+    ':=',
+    '==',
+    '!=',
+    '<',
+    '>',
+    '<=',
+    '>=',
+    '+',
+    '-',
+    '*',
+    '/',
+    '%',
+    '&',
+    '|',
+    '^',
+    'and',
+    'or',
   ],
   symbols: /[=><!~?:&|+\-*/%]+/,
   tokenizer: {
@@ -51,12 +80,15 @@ export const regoMonarchLanguage = {
       [/`/, { token: 'string.quote', next: '@rawstring' }],
 
       // Operators
-      [/@symbols/, {
-        cases: {
-          '@operators': 'operator',
-          '@default': '',
+      [
+        /@symbols/,
+        {
+          cases: {
+            '@operators': 'operator',
+            '@default': '',
+          },
         },
-      }],
+      ],
 
       // Brackets
       [/[{}()[\]]/, '@brackets'],

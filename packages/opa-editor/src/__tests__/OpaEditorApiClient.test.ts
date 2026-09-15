@@ -18,12 +18,13 @@ describe('OpaEditorApiClient', () => {
   beforeEach(async () => {
     mockFetch = jest.fn();
     mockDiscoveryApi = {
-      getBaseUrl:
-        jest.fn().mockResolvedValue('http://localhost:7007/api/opa-editor'),
+      getBaseUrl: jest
+        .fn()
+        .mockResolvedValue('http://localhost:7007/api/opa-editor'),
     };
 
-    OpaEditorApiClient =
-      (await import('../api/OpaEditorApiClient.js')).OpaEditorApiClient;
+    OpaEditorApiClient = (await import('../api/OpaEditorApiClient.js'))
+      .OpaEditorApiClient;
   });
 
   function createClient() {

@@ -147,11 +147,7 @@ async function runOpaTypeCheck(
   // Write the schema file (placeholder — in production, load from domain package)
   const schemaFile = join(tmpDir, 'schema.json');
   // The domain's schema should be available; for now we use a minimal schema
-  writeFileSync(
-    schemaFile,
-    JSON.stringify({ type: 'object' }),
-    'utf-8',
-  );
+  writeFileSync(schemaFile, JSON.stringify({ type: 'object' }), 'utf-8');
 
   try {
     const { stderr } = await runCommand(opaBinary, [
@@ -209,10 +205,7 @@ function toDomainError(d: RegalDiagnostic): DomainError {
 }
 
 /** Parse OPA error output into DomainErrors. */
-function parseOpaErrors(
-  output: string,
-  layer: 'L1-schema',
-): DomainError[] {
+function parseOpaErrors(output: string, layer: 'L1-schema'): DomainError[] {
   const errors: DomainError[] = [];
   const lines = output.split('\n');
   for (const line of lines) {

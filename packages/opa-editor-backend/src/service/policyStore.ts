@@ -99,15 +99,8 @@ export class GitOpsPolicyStore {
 
     try {
       await git(['add', relPath]);
-      const commitMsg =
-        `chore(policy): update ${policyId} (${domainId} v${version})`;
-      await git([
-        'commit',
-        '-m',
-        `"${commitMsg}"`,
-        '--',
-        relPath,
-      ]);
+      const commitMsg = `chore(policy): update ${policyId} (${domainId} v${version})`;
+      await git(['commit', '-m', `"${commitMsg}"`, '--', relPath]);
 
       // Extract the commit SHA
       const sha = (await git(['rev-parse', 'HEAD'])).stdout.trim();

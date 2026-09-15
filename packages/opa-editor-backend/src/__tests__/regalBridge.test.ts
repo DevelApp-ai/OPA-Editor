@@ -82,22 +82,26 @@ describe('RegalBridge', () => {
       stdout: {
         on: (event: string, cb: (d: Buffer) => void) => {
           if (event === 'data') {
-            cb(Buffer.from(JSON.stringify({
-              violations: [
-                {
-                  location: { row: 3, col: 5 },
-                  level: 'error',
-                  description: 'rule not found',
-                  category: 'rules',
-                },
-                {
-                  location: { row: 10, col: 1 },
-                  level: 'warning',
-                  description: 'style issue',
-                  category: 'style',
-                },
-              ],
-            })));
+            cb(
+              Buffer.from(
+                JSON.stringify({
+                  violations: [
+                    {
+                      location: { row: 3, col: 5 },
+                      level: 'error',
+                      description: 'rule not found',
+                      category: 'rules',
+                    },
+                    {
+                      location: { row: 10, col: 1 },
+                      level: 'warning',
+                      description: 'style issue',
+                      category: 'style',
+                    },
+                  ],
+                }),
+              ),
+            );
           }
         },
       },

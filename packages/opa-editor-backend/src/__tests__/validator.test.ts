@@ -54,9 +54,9 @@ describe('validatePolicy', () => {
   });
 
   it('includes L2 warnings when Regal is unavailable', async () => {
-    mockRegalBridge.lintSource = jest.fn().mockRejectedValue(
-      new Error('regal not found'),
-    );
+    mockRegalBridge.lintSource = jest
+      .fn()
+      .mockRejectedValue(new Error('regal not found'));
     const { validatePolicy } = await import('../service/validator.js');
     const result = await validatePolicy(
       { domainId: 'test.domain', rego: validRego, domain: testDescriptor },

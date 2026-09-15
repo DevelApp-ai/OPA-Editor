@@ -93,8 +93,9 @@ export const opaEditorBackendPlugin = createBackendPlugin({
           repoPath,
           policiesDir,
           authorName: config.getOptionalString('opa-editor.gitops.authorName'),
-          authorEmail:
-            config.getOptionalString('opa-editor.gitops.authorEmail'),
+          authorEmail: config.getOptionalString(
+            'opa-editor.gitops.authorEmail',
+          ),
           branch:
             config.getOptionalString('opa-editor.gitops.branch') ?? 'main',
         });

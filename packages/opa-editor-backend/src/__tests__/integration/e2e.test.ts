@@ -84,8 +84,8 @@ e2eDescribe('E2E: author → validate → publish → verify', () => {
 
   beforeAll(async () => {
     OpaClient = (await import('../../service/opaClient.js')).OpaClient;
-    GitOpsPolicyStore =
-      (await import('../../service/policyStore.js')).GitOpsPolicyStore;
+    GitOpsPolicyStore = (await import('../../service/policyStore.js'))
+      .GitOpsPolicyStore;
 
     // Start OPA server — use OPA_SERVER_URL if a server is actually
     // reachable there; otherwise start our own (CI sets OPA_SERVER_URL

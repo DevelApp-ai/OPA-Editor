@@ -13,8 +13,8 @@ describe('GitOpsPolicyStore', () => {
   let repoPath: string;
 
   beforeAll(async () => {
-    GitOpsPolicyStore =
-      (await import('../service/policyStore.js')).GitOpsPolicyStore;
+    GitOpsPolicyStore = (await import('../service/policyStore.js'))
+      .GitOpsPolicyStore;
   });
 
   beforeEach(() => {
