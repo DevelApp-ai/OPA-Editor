@@ -1,0 +1,35 @@
+# Jekyll configuration for the GitHub Pages site (https://develapp-ai.github.io/OPA-Editor/).
+#
+# The site is built by .github/workflows/jekyll-gh-pages.yml from the
+# repository root, so every markdown file in the repo becomes a page
+# (docs/*.md, README.md — the README becomes the front page via the
+# jekyll-readme-index plugin that GitHub enables by default).
+
+title: OPA Rego Editor for Backstage
+description: >-
+  Domain-scoped OPA Rego policy editor plugin for Backstage — a
+  user guide for policy authors, a domain authoring guide for
+  developers, and the technical design specification.
+
+# Documentation quotes code (e.g. JSX `options={{ ... }}` and Rego
+# bodies). Liquid parses `{{ ... }}` as a variable and a stray pair
+# fails the whole build (it did, on the first deploy). `warn` renders
+# the offending text as-is instead of failing the site.
+liquid:
+  error_mode: warn
+
+# Keep the published site documentation-only: do not copy source code,
+# CI config, or build output into the site.
+exclude:
+  - node_modules
+  - packages
+  - tools
+  - coverage
+  - artifacts
+  - .github
+  - jest.config.js
+  - tsconfig.json
+  - typedoc.json
+  - .eslintrc.js
+  - .prettierrc.json
+  - .editorconfig
