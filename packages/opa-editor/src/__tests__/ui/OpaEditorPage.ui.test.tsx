@@ -56,9 +56,7 @@ jest.mock('../../components/RegoEditor', () => ({
       aria-label="rego-editor"
       style={{ width: '100%', height: '100%' }}
       value={value}
-      onChange={(e: { target: { value: string } }) =>
-        onChange(e.target.value)
-      }
+      onChange={(e: { target: { value: string } }) => onChange(e.target.value)}
     />
   ),
 }));
