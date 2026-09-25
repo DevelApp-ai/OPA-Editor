@@ -82,7 +82,15 @@ npm test -- --testPathPattern=integration
 
 # E2E tests (requires OPA server running)
 OPA_SERVER_URL=http://localhost:8181 npm test -- --testPathPattern=e2e
+
+# UI screenshot tests (renders the plugin UI to standalone HTML files)
+npm test -- --testPathPattern=screenshot
 ```
+
+The UI is also tested with screenshots — every PR produces PNG images of
+the editor in its meaningful states (fresh page, diagnostics, published,
+rejected), uploaded as CI artifacts. See
+[UI Testing with Screenshots](docs/ui-testing.md).
 
 ### Lint & format
 
