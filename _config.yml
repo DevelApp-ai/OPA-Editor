@@ -1,15 +1,36 @@
 # Jekyll configuration for the GitHub Pages site (https://develapp-ai.github.io/OPA-Editor/).
 #
+# Unified format shared by the DevelApp-ai ecosystem Pages sites
+# (Minotaur, CognitiveGraph, ENFAStepLexer-StepParser, Minotaur-Grammars)
+# — same theme and layout; only title/description and the repo-specific
+# `exclude` list differ. Keep them in sync when changing this file.
+#
 # The site is built by .github/workflows/jekyll-gh-pages.yml from the
-# repository root, so every markdown file in the repo becomes a page
-# (docs/*.md, README.md — the README becomes the front page via the
-# jekyll-readme-index plugin that GitHub enables by default).
+# repository root; the defaults below render every markdown file with
+# the theme layout, so docs/*.md and README.md all become themed pages.
 
+theme: jekyll-theme-leap-day
 title: OPA Rego Editor for Backstage
-description: >-
-  Domain-scoped OPA Rego policy editor plugin for Backstage — a
-  user guide for policy authors, a domain authoring guide for
-  developers, and the technical design specification.
+description: Domain-scoped OPA Rego policy editor plugin for Backstage
+show_downloads: true
+
+# Repository information
+repository: DevelApp-ai/OPA-Editor
+github:
+  repository_name: "OPA-Editor"
+  repository_nwo: "DevelApp-ai/OPA-Editor"
+  owner_name: "DevelApp-ai"
+
+# Site URL for sitemap generation
+url: https://develapp-ai.github.io
+baseurl: /OPA-Editor
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  hard_wrap: false
 
 # Documentation quotes code (e.g. JSX `options={{ ... }}` and Rego
 # bodies). Liquid parses `{{ ... }}` as a variable and a stray pair
@@ -17,6 +38,29 @@ description: >-
 # the offending text as-is instead of failing the site.
 liquid:
   error_mode: warn
+
+# Plugins (GitHub Pages supported plugins only)
+plugins:
+  - jekyll-sitemap
+
+# Render every Markdown file with the theme layout: the root README and
+# everything under docs/ becomes a themed page, so the full documentation
+# set is browsable on the site, not just the files a theme links by
+# default.
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# Site navigation (used by the theme where supported; also serves as the
+# canonical link list kept identical across the ecosystem sites)
+navigation:
+  - title: Home
+    url: /
+  - title: GitHub
+    url: https://github.com/DevelApp-ai/OPA-Editor
 
 # Keep the published site documentation-only: do not copy source code,
 # CI config, or build output into the site.

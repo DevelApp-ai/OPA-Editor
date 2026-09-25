@@ -32,18 +32,15 @@ You never need to touch a server, a git repository, or a command line.
 
 When you open the editor you see four areas:
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│ 1. Domain selector                                           │
-├──────────────────────────────────┬───────────────────────────┤
-│                                  │                           │
-│  2. The policy editor            │  3. The diagnostics panel │
-│     (where you type)             │     (the messages)        │
-│                                  │                           │
-├──────────────────────────────────┴───────────────────────────┤
-│ 4. [Validate]  [Publish]  and status messages                │
-└──────────────────────────────────────────────────────────────┘
-```
+![The OPA editor page with a fresh policy](images/opa-editor-page--default.png)
+
+*The editor page with a fresh policy — domain selector on top, policy editor on the left, diagnostics on the right, actions at the bottom.*
+
+> The screenshots in this guide are generated automatically from the
+> editor's own test suite, so they always show the current version of
+> the page. In these generated images the policy editor appears as a
+> plain text box; in Backstage itself it is a full code editor with
+> coloring, suggestions, and templates.
 
 | # | Area | What it is for |
 |---|------|----------------|
@@ -92,6 +89,10 @@ missing rules are reported automatically.
 
 A few seconds after you stop typing, the panel updates:
 
+![The editor with three problems listed in the diagnostics panel](images/opa-editor-page--diagnostics.png)
+
+*The diagnostics panel showing problems from all three check groups, with severity chips and line numbers.*
+
 - **✓ No issues found** — your policy passes all checks so far.
 - **Diagnostics (N)** — N problems were found. Each one shows:
   - a **message** in plain language (e.g. *"input.EffectiveCost:
@@ -120,6 +121,10 @@ the complete result. Fix any 🔴 errors and press Validate again.
 ### Step 6 — Press **Publish**
 
 When everything passes:
+
+![The editor after a successful publish](images/opa-editor-page--published.png)
+
+*After a successful publish, the status message next to the buttons shows the revision fingerprint.*
 
 1. Press **Publish**.
 2. You will see one of:
