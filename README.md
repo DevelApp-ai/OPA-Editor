@@ -165,6 +165,15 @@ const routes = (
 See the [Domain Authoring Guide](docs/domain-authoring-guide.md) for a step-by-step
 guide to creating a new domain package.
 
+## Documentation
+
+| Audience | Document |
+|----------|----------|
+| Policy authors (non-technical) | [User Guide](docs/user-guide.md) |
+| Domain developers | [Domain Authoring Guide](docs/domain-authoring-guide.md) |
+| All developers | [UI Testing with Screenshots](docs/ui-testing.md) |
+| Architects | [Design Specification](docs/opa-editor-backstage-design-spec.md) |
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
