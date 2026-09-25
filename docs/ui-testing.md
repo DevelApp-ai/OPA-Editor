@@ -82,6 +82,28 @@ node tools/capture-screenshots.mjs
 # → artifacts/ui-screenshots/*.png
 ```
 
+## Screenshots in the user documentation
+
+On every push to `main`, the workflow also **publishes the PNGs into
+`docs/images/`** and commits them, then triggers a rebuild of the GitHub
+Pages site. The [User Guide](user-guide.md) embeds these images, so the
+user documentation always shows screenshots of the *current* UI — when
+a component changes, the next run on `main` replaces the images
+automatically.
+
+Details of the publish step:
+
+- Only the `main` branch publishes; PR runs only upload the artifact.
+- If the rendered PNGs are byte-identical, nothing is committed.
+- The commit is pushed with `GITHUB_TOKEN`, whose pushes do **not**
+  fire `push`-event workflows — that is why the workflow explicitly
+  dispatches the Pages deploy (`workflow_dispatch` events *do* trigger
+  workflows).
+
+Note that these images are rendered from the **test harness**, in which
+the Monaco editor is mocked as a plain `<textarea>` — they document
+layout and states faithfully, but not the editor's syntax highlighting.
+
 ## Adding a new screenshot
 
 1. Add a test case to `OpaEditorPage.screenshot.test.tsx`:
@@ -101,9 +123,16 @@ node tools/capture-screenshots.mjs
    });
    ```
 
-2. Commit the generated HTML file together with your change.
+2. The HTML file is generated in CI when the screenshot tests run —
+   nothing to commit by hand.
 
-3. The PNG for the new state appears in the CI artifact automatically.
+3. The PNG for the new state appears in the CI artifact automatically,
+   and is published to `docs/images/` on the next push to `main`. If the
+   user guide should show it, embed it there:
+
+   ```markdown
+   ![Description of the state](images/opa-editor-page--new-state.png)
+   ```
 
 ## Scope & future work
 

@@ -3,14 +3,24 @@ name: UI Screenshots
 # UI testing with screenshots (issue #14).
 # Renders the plugin UI in jsdom across its meaningful states (via the
 # screenshot Jest tests), converts each HTML render to a real PNG with
-# Playwright, and uploads the images as workflow artifacts so reviewers
-# can see the UI without running a dev server.
+# Playwright, and:
+#
+#   - uploads the images as workflow artifacts so reviewers can see the
+#     UI without running a dev server (every run), and
+#   - on main, publishes them into docs/images/ so the user
+#     documentation embeds always-current screenshots, then triggers a
+#     Pages rebuild (GITHUB_TOKEN pushes do not fire `push` events, so
+#     the Jekyll deploy is dispatched explicitly).
 
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   ui-screenshots:
@@ -48,3 +58,25 @@ jobs:
           name: ui-screenshots
           path: artifacts/ui-screenshots/*.png
           retention-days: 30
+
+      - name: Publish screenshots into docs/images
+        if: >
+          github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p docs/images
+          cp artifacts/ui-screenshots/*.png docs/images/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/images
+          if git diff --cached --quiet; then
+            echo "Screenshots unchanged — nothing to publish"
+          else
+            git commit -m "docs(images): update UI screenshots"
+            git push
+            # GITHUB_TOKEN pushes do not trigger `push`-event workflows,
+            # so rebuild the Pages site explicitly (workflow_dispatch
+            # events *do* trigger workflows).
+            gh workflow run "Deploy Jekyll with GitHub Pages dependencies preinstalled" --ref main
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

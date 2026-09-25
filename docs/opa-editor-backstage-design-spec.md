@@ -170,13 +170,15 @@ export const RegoEditor = ({ domainId, value, onChange }: Props) => {
     });
   };
 
+  const options = { minimap: { enabled: false }, automaticLayout: true };
+
   return (
     <Editor
       language="rego"
       value={value}
       onMount={onMount}
       onChange={v => onChange(v ?? '')}
-      options={{ minimap: { enabled: false }, automaticLayout: true }}
+      options={options}
     />
   );
 };
