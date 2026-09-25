@@ -80,12 +80,8 @@ describe('OpaEditorPage — useful UI contract', () => {
     expect(editor.value).toContain('package finops.costmodel.template');
 
     // 3. Action buttons with clear labels
-    expect(
-      screen.getByRole('button', { name: 'Validate' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Publish' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Validate' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Publish' })).toBeInTheDocument();
 
     // 4. Diagnostics surface (empty state is visible feedback, not blank)
     expect(screen.getByText('✓ No issues found')).toBeInTheDocument();
@@ -97,11 +93,7 @@ describe('OpaEditorPage — useful UI contract', () => {
     fireEvent.mouseDown(screen.getByRole('combobox'));
 
     // The bundled FinOps FOCUS domain must be selectable.
-    expect(
-      screen.getByRole('option', {
-        name: /FinOps/i,
-      }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: /FinOps/i })).toBeInTheDocument();
   });
 
   it('surfaces backend validation errors in the panel', async () => {
@@ -128,9 +120,7 @@ describe('OpaEditorPage — useful UI contract', () => {
     await waitFor(() => {
       expect(screen.getByText('Diagnostics (2)')).toBeInTheDocument();
     });
-    expect(
-      screen.getByText(/undefined field/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/undefined field/)).toBeInTheDocument();
     expect(screen.getByText('Line 17:3')).toBeInTheDocument();
   });
 
@@ -188,9 +178,7 @@ describe('OpaEditorPage — useful UI contract', () => {
   it('edits policy text through the editor', () => {
     render(<OpaEditorPage />);
 
-    const editor = screen.getByLabelText(
-      'rego-editor',
-    ) as HTMLTextAreaElement;
+    const editor = screen.getByLabelText('rego-editor') as HTMLTextAreaElement;
     fireEvent.change(editor, { target: { value: 'package custom\n' } });
     expect(editor.value).toBe('package custom\n');
   });

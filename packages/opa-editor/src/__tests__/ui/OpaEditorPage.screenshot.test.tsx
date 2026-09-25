@@ -12,11 +12,7 @@
  * screenshot can never silently record a broken or empty page.
  */
 
-import {
-  screen,
-  fireEvent,
-  waitFor,
-} from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { OpaEditorPage } from '../../components/OpaEditorPage';
 import { DiagnosticsPanel } from '../../components/DiagnosticsPanel';
 import { DomainPicker } from '../../components/DomainPicker';
@@ -228,9 +224,7 @@ describe('UI screenshots — components in isolation', () => {
         setup: () => {
           fireEvent.mouseDown(screen.getByRole('combobox'));
           expect(
-            screen.getByRole('option', {
-              name: 'Security Access Control',
-            }),
+            screen.getByRole('option', { name: 'Security Access Control' }),
           ).toBeInTheDocument();
         },
       },
