@@ -57,10 +57,11 @@ jest.mock('@monaco-editor/react', () => ({
   ),
 }));
 
-const { validate: validateMock, publish: publishMock } =
-  (jest.requireMock('@backstage/core-plugin-api') as {
+const { validate: validateMock, publish: publishMock } = (
+  jest.requireMock('@backstage/core-plugin-api') as {
     __mockOpaApi: Record<string, jest.Mock>;
-  }).__mockOpaApi;
+  }
+).__mockOpaApi;
 
 // --- Tests -------------------------------------------------------------
 
@@ -80,7 +81,9 @@ describe('OpaEditorPage — useful UI contract', () => {
     expect(editor.value).toContain('package finops.costmodel.template');
 
     // 3. Action buttons with clear labels
-    expect(screen.getByRole('button', { name: 'Validate' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Validate' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Publish' })).toBeInTheDocument();
 
     // 4. Diagnostics surface (empty state is visible feedback, not blank)

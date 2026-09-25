@@ -58,10 +58,11 @@ jest.mock('@monaco-editor/react', () => ({
   ),
 }));
 
-const { validate: validateMock, publish: publishMock } =
-  (jest.requireMock('@backstage/core-plugin-api') as {
+const { validate: validateMock, publish: publishMock } = (
+  jest.requireMock('@backstage/core-plugin-api') as {
     __mockOpaApi: Record<string, jest.Mock>;
-  }).__mockOpaApi;
+  }
+).__mockOpaApi;
 
 const sampleErrors: DomainError[] = [
   {
