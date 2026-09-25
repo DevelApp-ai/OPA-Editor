@@ -20,7 +20,7 @@ import type { PublishResponse } from '../../api/OpaEditorApiClient';
 import type { DomainError } from '@develapp/opa-domain-contract';
 import { renderScreenshot } from './screenshotHarness';
 
-// --- Mocks (same as OpaEditorPage.ui.test.tsx) --------------------------
+// --- Mocks (same as OpaEditorPage.ui.test.tsx) -------------------------
 
 // Mock Backstage API module entirely (ESM dist + Jest hoisting — see
 // OpaEditorPage.ui.test.tsx for the full rationale).
@@ -38,21 +38,27 @@ jest.mock('@backstage/core-plugin-api', () => {
   };
 });
 
-/** Mock Monaco with a plain textarea so jsdom can render the editor. */
-jest.mock('@monaco-editor/react', () => ({
-  Editor: ({
+/**
+ * Mock the RegoEditor (Monaco wrapper) with a plain textarea so jsdom can
+ * render the editor. Mocking at this level keeps the real
+ * @monaco-editor/react types out of the ts-jest program — RegoEditor's
+ * minimal MonacoLike interface does not type-check against the real
+ * EditorProps under ts-jest (tsc --build accepts it, ts-jest does not).
+ */
+jest.mock('../../components/RegoEditor', () => ({
+  RegoEditor: ({
     value,
     onChange,
   }: {
-    value?: string;
-    onChange?: (v: string | undefined) => void;
+    value: string;
+    onChange: (value: string) => void;
   }) => (
     <textarea
       aria-label="rego-editor"
       style={{ width: '100%', height: '100%' }}
       value={value}
       onChange={(e: { target: { value: string } }) =>
-        onChange?.(e.target.value)
+        onChange(e.target.value)
       }
     />
   ),

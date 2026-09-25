@@ -7,8 +7,8 @@
  * diagnostics panel — and that the visible state changes as the user
  * works (validation results appear, publish feedback appears).
  *
- * Backstage API and Monaco are mocked; everything else is the real
- * component tree.
+ * Backstage API and the RegoEditor are mocked; everything else is the
+ * real component tree.
  */
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
@@ -37,21 +37,27 @@ jest.mock('@backstage/core-plugin-api', () => {
   };
 });
 
-/** Mock Monaco with a plain textarea so jsdom can render the editor. */
-jest.mock('@monaco-editor/react', () => ({
-  Editor: ({
+/**
+ * Mock the RegoEditor (Monaco wrapper) with a plain textarea so jsdom can
+ * render the editor. Mocking at this level keeps the real
+ * @monaco-editor/react types out of the ts-jest program — RegoEditor's
+ * minimal MonacoLike interface does not type-check against the real
+ * EditorProps under ts-jest (tsc --build accepts it, ts-jest does not).
+ */
+jest.mock('../../components/RegoEditor', () => ({
+  RegoEditor: ({
     value,
     onChange,
   }: {
-    value?: string;
-    onChange?: (v: string | undefined) => void;
+    value: string;
+    onChange: (value: string) => void;
   }) => (
     <textarea
       aria-label="rego-editor"
       style={{ width: '100%', height: '100%' }}
       value={value}
       onChange={(e: { target: { value: string } }) =>
-        onChange?.(e.target.value)
+        onChange(e.target.value)
       }
     />
   ),
