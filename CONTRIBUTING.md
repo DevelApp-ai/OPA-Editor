@@ -51,6 +51,10 @@ npm test          # Tests
 - Aim for meaningful coverage of logic paths, not just line coverage
 - Integration tests (requiring OPA/Regal binaries) go in `src/__tests__/integration/`
 - E2E tests go in `src/__tests__/integration/e2e.test.ts`
+- UI screenshot tests go in `packages/opa-editor/src/__tests__/ui/` — see
+  [docs/ui-testing.md](docs/ui-testing.md). Regenerate committed
+  screenshots with `npm test -- --testPathPattern=screenshot` and commit
+  them with your change.
 
 ### Running specific test suites
 ```bash

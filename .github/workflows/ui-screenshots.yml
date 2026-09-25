@@ -1,0 +1,50 @@
+name: UI Screenshots
+
+# UI testing with screenshots (issue #14).
+# Renders the plugin UI in jsdom across its meaningful states (via the
+# screenshot Jest tests), converts each HTML render to a real PNG with
+# Playwright, and uploads the images as workflow artifacts so reviewers
+# can see the UI without running a dev server.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ui-screenshots:
+    name: Capture UI Screenshots
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build packages
+        run: npm run tsc
+
+      - name: Generate HTML screenshots (Jest)
+        run: npm test -- --testPathPattern=screenshot --ci
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright
+          npx playwright install --with-deps chromium
+
+      - name: Capture PNG screenshots
+        run: node tools/capture-screenshots.mjs
+
+      - name: Upload screenshots artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-screenshots
+          path: artifacts/ui-screenshots/*.png
+          retention-days: 30
